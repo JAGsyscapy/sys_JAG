@@ -9,10 +9,9 @@ export default function Admin() {
   const [activeModal, setActiveModal] = useState(null);
   const [saving, setSaving] = useState(false);
   const [imageFile, setImageFile] = useState(null);
-  
+  const [deletedImages, setDeletedImages] = useState([]);
   const [newGalImg, setNewGalImg] = useState(null);
   const [newGalTitle, setNewGalTitle] = useState('');
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,9 +61,11 @@ export default function Admin() {
   const saveChanges = async () => {
     setSaving(true);
     let currentImage = data.hero.image;
+    let pendingDeletes = [...deletedImages];
 
     try {
       if (imageFile) {
+        if (currentImage) pendingDeletes.push(currentImage);
         currentImage = await uploadToCloudinary(imageFile);
       }
 
@@ -81,7 +82,8 @@ export default function Admin() {
       const payload = { 
         ...data, 
         hero: { ...data.hero, image: currentImage },
-        gallery: finalGallery
+        gallery: finalGallery,
+        deletedImages: pendingDeletes
       };
 
       const res = await fetch('/api/data', {
@@ -97,9 +99,10 @@ export default function Admin() {
         setData(payload);
         setActiveModal(null);
         setImageFile(null);
+        setDeletedImages([]);
       }
     } catch (error) {
-      alert('Hubo un error al guardar las imágenes.');
+      alert('Hubo un error al guardar los cambios.');
     } finally {
       setSaving(false);
     }
@@ -117,6 +120,10 @@ export default function Admin() {
   };
 
   const handleRemoveGalleryItem = (index) => {
+    const removed = data.gallery[index];
+    if (removed.url) {
+      setDeletedImages([...deletedImages, removed.url]);
+    }
     const newGallery = data.gallery.filter((_, i) => i !== index);
     setData({ ...data, gallery: newGallery });
   };
@@ -151,15 +158,15 @@ export default function Admin() {
       <div className="bg-white w-full max-w-4xl rounded-[2rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
         <div className="p-6 md:p-8 border-b border-gray-200 flex justify-between items-center bg-gray-50">
           <h3 className="text-2xl font-black text-text-main">{title}</h3>
-          <button onClick={() => setActiveModal(null)} className="text-gray-500 hover:text-red-600 font-black text-sm uppercase tracking-widest px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200">Cerrar</button>
+          <button onClick={() => {setActiveModal(null); setImageFile(null);}} className="text-gray-500 hover:text-red-600 font-black text-sm uppercase tracking-widest px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200">Cerrar</button>
         </div>
         <div className="p-6 md:p-10 space-y-6 max-h-[65vh] overflow-y-auto">
           {children}
         </div>
         <div className="p-6 md:p-8 bg-gray-50 border-t border-gray-200 flex justify-end gap-4">
-          <button onClick={() => setActiveModal(null)} className="px-6 py-3 font-black text-gray-500 hover:text-text-main">Cancelar</button>
+          <button onClick={() => {setActiveModal(null); setImageFile(null);}} className="px-6 py-3 font-black text-gray-500 hover:text-text-main">Cancelar</button>
           <button onClick={saveChanges} disabled={saving} className="bg-accent-green text-white px-8 py-3 rounded-xl font-black text-sm uppercase tracking-widest shadow-md hover:bg-green-600 disabled:opacity-50">
-            {saving ? 'Guardando/Subiendo...' : 'Aplicar Cambios'}
+            {saving ? 'Procesando...' : 'Aplicar Cambios'}
           </button>
         </div>
       </div>
@@ -194,13 +201,28 @@ export default function Admin() {
 
         {activeModal === 'hero' && (
           <Modal title="Editar Inicio">
-            <div className="space-y-4">
+            <div className="space-y-6">
               <Input label="Nombre Profesional" value={data.hero.name} onChange={v => setData({...data, hero: {...data.hero, name: v}})} />
               <Input label="Título de Subtítulo" value={data.hero.subtitle} onChange={v => setData({...data, hero: {...data.hero, subtitle: v}})} />
               <Input label="Propuesta de Terapia" value={data.hero.therapy} onChange={v => setData({...data, hero: {...data.hero, therapy: v}})} />
               <div className="space-y-2">
-                <span className="text-xs font-black uppercase text-text-main ml-2">Imagen Personal (Opcional)</span>
-                <input type="file" className="w-full text-sm font-bold file:bg-gray-200 file:border-none file:rounded-xl file:px-6 file:py-3 file:mr-4 file:font-black file:text-text-main hover:file:bg-gray-300" onChange={e => setImageFile(e.target.files[0])} />
+                <span className="text-xs font-black uppercase text-text-main ml-2">Imagen Principal (Opcional)</span>
+                <div className="relative w-full h-64 bg-gray-50 border-2 border-dashed border-gray-300 rounded-[2rem] flex flex-col items-center justify-center overflow-hidden hover:bg-gray-100 transition-colors group">
+                  {(imageFile || data.hero.image) ? (
+                    <>
+                      <img src={imageFile ? URL.createObjectURL(imageFile) : data.hero.image} className="w-full h-full object-cover group-hover:opacity-40 transition-opacity" />
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span className="bg-text-main text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl">Reemplazar Imagen</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-center space-y-2">
+                      <div className="bg-white border border-gray-200 text-text-main px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-sm">Seleccionar Archivo</div>
+                      <p className="text-xs font-bold text-gray-400">JPG, PNG o WEBP</p>
+                    </div>
+                  )}
+                  <input type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" onChange={e => setImageFile(e.target.files[0])} />
+                </div>
               </div>
             </div>
           </Modal>
@@ -291,15 +313,15 @@ export default function Admin() {
         {activeModal === 'gallery' && (
           <Modal title="Gestor de Galería">
             <div className="space-y-8">
-              <div className="bg-gray-50 border border-gray-200 p-6 rounded-2xl space-y-4">
+              <div className="bg-gray-50 border border-gray-200 p-6 rounded-[2rem] space-y-4">
                 <h4 className="font-black uppercase tracking-widest text-xs text-text-main">Añadir nueva imagen</h4>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <div className="flex-1 space-y-2">
-                    <input type="text" placeholder="Título o descripción" className="w-full bg-white border border-gray-300 p-3 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-sm text-text-main" value={newGalTitle} onChange={e => setNewGalTitle(e.target.value)} />
+                  <div className="flex-1 space-y-3">
+                    <input type="text" placeholder="Título (Opcional)" className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-sm text-text-main" value={newGalTitle} onChange={e => setNewGalTitle(e.target.value)} />
                     <input type="file" accept="image/*" className="w-full text-sm font-bold file:bg-gray-200 file:border-none file:rounded-xl file:px-4 file:py-2 file:mr-4 file:font-black file:text-text-main hover:file:bg-gray-300" onChange={e => setNewGalImg(e.target.files[0])} />
                   </div>
-                  <button onClick={handleAddGalleryItem} className="bg-text-main text-white px-6 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-black transition-colors shrink-0 h-12 sm:h-auto">
-                    Agregar a lista
+                  <button onClick={handleAddGalleryItem} className="bg-text-main text-white px-6 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-black transition-colors shrink-0 h-14 sm:h-auto">
+                    Agregar
                   </button>
                 </div>
               </div>
@@ -311,11 +333,13 @@ export default function Admin() {
                 ) : (
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     {data.gallery.map((img, i) => (
-                      <div key={i} className="group relative bg-white rounded-xl overflow-hidden border border-gray-200 shadow-sm aspect-square flex flex-col">
+                      <div key={i} className="group relative bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm aspect-square flex flex-col">
                         <img src={img.url || img.preview} alt={img.title} className="w-full h-full object-cover flex-1" />
-                        <div className="p-3 bg-white border-t border-gray-100">
-                          <p className="text-xs font-bold text-text-main truncate" title={img.title}>{img.title || 'Sin título'}</p>
-                        </div>
+                        {img.title && (
+                          <div className="absolute bottom-0 w-full p-2 bg-black/60 backdrop-blur-sm">
+                            <p className="text-[10px] font-bold text-white truncate">{img.title}</p>
+                          </div>
+                        )}
                         <button onClick={() => handleRemoveGalleryItem(i)} className="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 flex items-center justify-center rounded-full font-black opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110 shadow-lg">
                           ×
                         </button>

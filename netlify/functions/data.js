@@ -6,6 +6,32 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
+const deleteCloudinaryImage = async (url) => {
+  try {
+    const parts = url.split('/upload/');
+    if (parts.length < 2) return;
+    const fileWithExt = parts[1].split('/').slice(1).join('/');
+    const publicId = fileWithExt.substring(0, fileWithExt.lastIndexOf('.'));
+    
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+    const apiKey = process.env.CLOUDINARY_API_KEY;
+    const apiSecret = process.env.CLOUDINARY_API_SECRET;
+    
+    if (!cloudName || !apiKey || !apiSecret) return;
+
+    const auth = Buffer.from(apiKey + ':' + apiSecret).toString('base64');
+    
+    await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/resources/image/upload`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Basic ${auth}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ public_ids: [publicId] })
+    });
+  } catch (e) {}
+};
+
 export const handler = async (event, context) => {
   if (event.httpMethod === 'GET') {
     try {
@@ -116,6 +142,13 @@ export const handler = async (event, context) => {
         ]);
 
         await client.query('COMMIT');
+
+        if (newData.deletedImages && newData.deletedImages.length > 0) {
+          for (const oldUrl of newData.deletedImages) {
+            await deleteCloudinaryImage(oldUrl);
+          }
+        }
+
       } catch (e) {
         await client.query('ROLLBACK');
         throw e;
