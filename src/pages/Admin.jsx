@@ -77,17 +77,20 @@ export default function Admin() {
   if (!token) {
     return (
       <div className="min-h-screen bg-bg-main flex items-center justify-center p-6 font-sans">
-        <form onSubmit={handleLogin} className="bg-white p-12 rounded-[3rem] shadow-2xl max-w-md w-full space-y-8 border border-text-main/5">
-          <div className="text-center space-y-2">
-            <h2 className="text-3xl font-black text-text-main tracking-tighter">Acceso Admin</h2>
-            <p className="text-xs font-bold text-text-main/30 uppercase tracking-widest">Gestión de Contenidos</p>
+        <form onSubmit={handleLogin} className="bg-white p-12 rounded-[3rem] shadow-xl max-w-md w-full space-y-8 border border-gray-200">
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <img src={logoPsic} alt="Logo" className="h-20 w-auto object-contain" />
+            <div className="text-center">
+              <h2 className="text-3xl font-black text-text-main tracking-tight">Acceso Admin</h2>
+              <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mt-1">Gestión de Contenidos</p>
+            </div>
           </div>
           <div className="space-y-4">
-            <input type="text" placeholder="Usuario" className="w-full bg-bg-main/50 border-none p-5 rounded-2xl focus:ring-2 ring-accent-green transition-all outline-none font-bold" value={credentials.username} onChange={e => setCredentials({...credentials, username: e.target.value})} />
-            <input type="password" placeholder="Contraseña" className="w-full bg-bg-main/50 border-none p-5 rounded-2xl focus:ring-2 ring-accent-green transition-all outline-none font-bold" value={credentials.password} onChange={e => setCredentials({...credentials, password: e.target.value})} />
+            <input type="text" placeholder="Usuario" className="w-full bg-gray-50 border border-gray-200 p-5 rounded-2xl focus:ring-2 ring-accent-green outline-none font-bold text-text-main" value={credentials.username} onChange={e => setCredentials({...credentials, username: e.target.value})} />
+            <input type="password" placeholder="Contraseña" className="w-full bg-gray-50 border border-gray-200 p-5 rounded-2xl focus:ring-2 ring-accent-green outline-none font-bold text-text-main" value={credentials.password} onChange={e => setCredentials({...credentials, password: e.target.value})} />
           </div>
-          <button className="w-full bg-text-main text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:shadow-xl active:scale-95 transition-all">
-            Ingresar al Sistema
+          <button className="w-full bg-text-main text-white py-5 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-black transition-all">
+            Ingresar
           </button>
         </form>
       </div>
@@ -97,18 +100,18 @@ export default function Admin() {
   if (!data) return null;
 
   const Modal = ({ title, children }) => (
-    <div className="fixed inset-0 bg-text-main/40 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
-      <div className="bg-white w-full max-w-2xl rounded-[3rem] shadow-2xl overflow-hidden border border-white/20 animate-in fade-in zoom-in duration-200">
-        <div className="p-8 border-b border-gray-100 flex justify-between items-center">
-          <h3 className="text-2xl font-black tracking-tight">{title}</h3>
-          <button onClick={() => setActiveModal(null)} className="text-gray-400 hover:text-red-500 font-bold">Cerrar</button>
+    <div className="fixed inset-0 bg-text-main/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+      <div className="bg-white w-full max-w-2xl rounded-[2rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div className="p-6 md:p-8 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+          <h3 className="text-2xl font-black text-text-main">{title}</h3>
+          <button onClick={() => setActiveModal(null)} className="text-gray-500 hover:text-red-600 font-black text-sm uppercase tracking-widest px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200">Cerrar</button>
         </div>
-        <div className="p-10 space-y-6 max-h-[70vh] overflow-y-auto">
+        <div className="p-6 md:p-10 space-y-6 max-h-[65vh] overflow-y-auto">
           {children}
         </div>
-        <div className="p-8 bg-gray-50 flex justify-end gap-4">
-          <button onClick={() => setActiveModal(null)} className="px-6 py-3 font-bold text-gray-400">Cancelar</button>
-          <button onClick={saveChanges} disabled={saving} className="bg-accent-green text-white px-10 py-3 rounded-2xl font-black text-xs uppercase tracking-widest disabled:opacity-50">
+        <div className="p-6 md:p-8 bg-gray-50 border-t border-gray-200 flex justify-end gap-4">
+          <button onClick={() => setActiveModal(null)} className="px-6 py-3 font-black text-gray-500 hover:text-text-main">Cancelar</button>
+          <button onClick={saveChanges} disabled={saving} className="bg-accent-green text-white px-8 py-3 rounded-xl font-black text-sm uppercase tracking-widest shadow-md hover:bg-green-600 disabled:opacity-50">
             {saving ? 'Guardando...' : 'Aplicar Cambios'}
           </button>
         </div>
@@ -117,17 +120,17 @@ export default function Admin() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 md:p-12 font-sans pb-40">
+    <div className="min-h-screen bg-gray-100 p-6 md:p-12 font-sans pb-40">
       <div className="max-w-6xl mx-auto space-y-12">
-        <header className="flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-center md:text-left flex items-center gap-4">
-            <img src={logoPsic} alt="Logo Admin" className="h-14 w-14 rounded-xl shadow-sm hidden md:block" />
-            <div>
-              <h1 className="text-4xl font-black text-text-main tracking-tighter italic">Dashboard Administrativo</h1>
-              <p className="text-xs font-bold text-text-main/30 uppercase tracking-[0.3em] mt-1">Gestión de datos normalizados</p>
+        <header className="flex flex-col md:flex-row justify-between items-center gap-6 bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-gray-200">
+          <div className="flex items-center gap-6">
+            <img src={logoPsic} alt="Logo Admin" className="h-16 w-auto object-contain hidden md:block" />
+            <div className="text-center md:text-left">
+              <h1 className="text-3xl md:text-4xl font-black text-text-main tracking-tight">Dashboard Administrativo</h1>
+              <p className="text-xs font-black text-gray-500 uppercase tracking-widest mt-1">Gestión de datos normalizados</p>
             </div>
           </div>
-          <button onClick={() => {localStorage.removeItem('token'); setToken(null); navigate('/')}} className="bg-white text-red-500 px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest border border-red-50 border-b-4 hover:border-b-2 transition-all">
+          <button onClick={() => {localStorage.removeItem('token'); setToken(null); navigate('/')}} className="bg-red-50 text-red-600 px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-red-100 transition-colors border border-red-200">
             Cerrar Sesión
           </button>
         </header>
@@ -135,7 +138,7 @@ export default function Admin() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <AdminCard title="Cabecera y Hero" subtitle="Nombre y Terapia" onClick={() => setActiveModal('hero')} />
           <AdminCard title="Sobre Mí" subtitle="Formación y Enfoque" onClick={() => setActiveModal('about')} />
-          <AdminCard title="Servicios" subtitle="Lista de Especialidades" onClick={() => setActiveModal('services')} />
+          <AdminCard title="Servicios" subtitle="Lista Individual" onClick={() => setActiveModal('services')} />
           <AdminCard title="Tarifas" subtitle="Precios y Promociones" onClick={() => setActiveModal('pricing')} />
           <AdminCard title="Contacto" subtitle="Teléfono y Dirección" onClick={() => setActiveModal('contact')} />
           <AdminCard title="Horarios" subtitle="Disponibilidad Diaria" onClick={() => setActiveModal('hours')} />
@@ -148,8 +151,8 @@ export default function Admin() {
               <Input label="Título de Subtítulo" value={data.hero.subtitle} onChange={v => setData({...data, hero: {...data.hero, subtitle: v}})} />
               <Input label="Propuesta de Terapia" value={data.hero.therapy} onChange={v => setData({...data, hero: {...data.hero, therapy: v}})} />
               <div className="space-y-2">
-                <span className="text-[10px] font-black uppercase text-gray-400 ml-2">Imagen Personal (Opcional)</span>
-                <input type="file" className="w-full text-sm file:bg-bg-main file:border-none file:rounded-xl file:px-4 file:py-2 file:font-bold file:text-text-main" onChange={e => setImageFile(e.target.files[0])} />
+                <span className="text-xs font-black uppercase text-text-main ml-2">Imagen Personal (Opcional)</span>
+                <input type="file" className="w-full text-sm font-bold file:bg-gray-200 file:border-none file:rounded-xl file:px-6 file:py-3 file:mr-4 file:font-black file:text-text-main hover:file:bg-gray-300" onChange={e => setImageFile(e.target.files[0])} />
               </div>
             </div>
           </Modal>
@@ -167,19 +170,46 @@ export default function Admin() {
         )}
 
         {activeModal === 'services' && (
-          <Modal title="Editar Servicios">
-            <div className="space-y-2">
-              <span className="text-[10px] font-black uppercase text-gray-400 ml-2">Especialidades (Separadas por comas)</span>
-              <textarea className="w-full bg-gray-50 p-6 rounded-3xl min-h-[200px] outline-none font-bold" value={data.services.join(', ')} onChange={e => setData({...data, services: e.target.value.split(',').map(s => s.trim())})} />
+          <Modal title="Editar Especialidades">
+            <div className="space-y-4">
+              <p className="text-xs font-black uppercase text-gray-500 mb-4">Administra cada servicio de forma individual</p>
+              {data.services.map((s, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <input 
+                    className="flex-1 bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-text-main" 
+                    value={s} 
+                    onChange={e => {
+                      const newServices = [...data.services];
+                      newServices[i] = e.target.value;
+                      setData({...data, services: newServices});
+                    }} 
+                  />
+                  <button 
+                    onClick={() => {
+                      const newServices = data.services.filter((_, index) => index !== i);
+                      setData({...data, services: newServices});
+                    }}
+                    className="bg-red-50 border border-red-200 text-red-600 w-14 h-14 flex items-center justify-center rounded-xl font-black text-xl hover:bg-red-100 transition-colors"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              <button 
+                onClick={() => setData({...data, services: [...data.services, 'Nuevo Servicio']})}
+                className="w-full bg-accent-green/10 border border-accent-green/20 text-accent-green py-4 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-accent-green hover:text-white transition-colors mt-4"
+              >
+                + Añadir Servicio
+              </button>
             </div>
           </Modal>
         )}
 
         {activeModal === 'pricing' && (
           <Modal title="Editar Tarifas">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-6">
               <Input label="Precio Regular" value={data.pricing.regular} onChange={v => setData({...data, pricing: {...data.pricing, regular: v}})} />
-              <Input label="Precio Promo" value={data.pricing.promo} onChange={v => setData({...data, pricing: {...data.pricing, promo: v}})} />
+              <Input label="Precio Promoción" value={data.pricing.promo} onChange={v => setData({...data, pricing: {...data.pricing, promo: v}})} />
             </div>
           </Modal>
         )}
@@ -215,18 +245,18 @@ export default function Admin() {
 }
 
 const AdminCard = ({ title, subtitle, onClick }) => (
-  <button onClick={onClick} className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm hover:shadow-2xl hover:border-accent-green/20 hover:-translate-y-1 transition-all text-left group w-full">
-    <div className="w-10 h-10 bg-bg-main rounded-xl mb-4 group-hover:bg-accent-green/10 transition-colors flex items-center justify-center text-accent-green">
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+  <button onClick={onClick} className="bg-white p-8 rounded-[2rem] border border-gray-200 shadow-sm hover:shadow-xl hover:border-accent-green hover:-translate-y-1 transition-all text-left group w-full">
+    <div className="w-12 h-12 bg-gray-50 border border-gray-100 rounded-xl mb-4 group-hover:bg-accent-green group-hover:border-accent-green transition-colors flex items-center justify-center text-gray-400 group-hover:text-white">
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
     </div>
-    <h4 className="text-lg font-black tracking-tight text-text-main">{title}</h4>
-    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">{subtitle}</p>
+    <h4 className="text-xl font-black tracking-tight text-text-main">{title}</h4>
+    <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">{subtitle}</p>
   </button>
 );
 
 const Input = ({ label, value, onChange }) => (
   <div className="space-y-2">
-    <span className="text-[10px] font-black uppercase text-gray-400 ml-2">{label}</span>
-    <input className="w-full bg-gray-50 p-4 rounded-2xl outline-none focus:ring-2 ring-accent-green/20 font-bold text-text-main" value={value} onChange={e => onChange(e.target.value)} />
+    <span className="text-xs font-black uppercase text-text-main ml-2">{label}</span>
+    <input className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-text-main" value={value} onChange={e => onChange(e.target.value)} />
   </div>
 );
