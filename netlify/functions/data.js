@@ -9,34 +9,107 @@ const pool = new Pool({
 export const handler = async (event, context) => {
   if (event.httpMethod === 'GET') {
     try {
-      const { rows } = await pool.query('SELECT content FROM website_data WHERE id = 1');
-      return { 
-        statusCode: 200, 
-        body: JSON.stringify(rows[0].content) 
+      const profRes = await pool.query('SELECT * FROM professional WHERE id = 1');
+      const prof = profRes.rows[0];
+
+      const servRes = await pool.query('SELECT name FROM service WHERE professional_id = 1');
+      const services = servRes.rows.map(row => row.name);
+
+      const priceRes = await pool.query('SELECT * FROM pricing WHERE professional_id = 1');
+      const pricing = priceRes.rows[0];
+
+      const contactRes = await pool.query('SELECT * FROM contact WHERE professional_id = 1');
+      const contact = contactRes.rows[0];
+
+      const responseData = {
+        hero: {
+          name: prof.name,
+          subtitle: prof.subtitle,
+          therapy: prof.therapy,
+          phone: prof.phone,
+          image: prof.image
+        },
+        about: {
+          education: prof.education,
+          approach: prof.approach,
+          objective: prof.objective,
+          target: prof.target
+        },
+        services: services,
+        pricing: {
+          promo: pricing.promo,
+          regular: pricing.regular
+        },
+        contact: {
+          displayPhone: contact.display_phone,
+          address: contact.address,
+          hoursWeekday: contact.hours_weekday,
+          hoursSaturday: contact.hours_saturday,
+          hoursSunday: contact.hours_sunday
+        }
       };
+
+      return { statusCode: 200, body: JSON.stringify(responseData) };
     } catch (error) {
       return { statusCode: 500, body: JSON.stringify({ error: 'Database error' }) };
     }
-  } 
-  
-  else if (event.httpMethod === 'PUT') {
+  }
+
+  if (event.httpMethod === 'PUT') {
     try {
       const authHeader = event.headers.authorization || event.headers.Authorization;
       if (!authHeader) return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
-      
+
       const token = authHeader.split(' ')[1];
-      jwt.verify(token, process.env.JWT_SECRET); 
-      
-      const newData = JSON.parse(event.body); 
-      await pool.query('UPDATE website_data SET content = $1 WHERE id = 1', [newData]);
-      
+      jwt.verify(token, process.env.JWT_SECRET);
+
+      const newData = JSON.parse(event.body);
+      const client = await pool.connect();
+
+      try {
+        await client.query('BEGIN');
+
+        await client.query(`
+          UPDATE professional SET
+          name = $1, subtitle = $2, therapy = $3, phone = $4, image = $5,
+          education = $6, approach = $7, objective = $8, target = $9
+          WHERE id = 1
+        `, [
+          newData.hero.name, newData.hero.subtitle, newData.hero.therapy, newData.hero.phone, newData.hero.image,
+          newData.about.education, newData.about.approach, newData.about.objective, newData.about.target
+        ]);
+
+        await client.query('DELETE FROM service WHERE professional_id = 1');
+        for (const s of newData.services) {
+          if (s) await client.query('INSERT INTO service (professional_id, name) VALUES (1, $1)', [s]);
+        }
+
+        await client.query(`
+          UPDATE pricing SET promo = $1, regular = $2 WHERE professional_id = 1
+        `, [newData.pricing.promo, newData.pricing.regular]);
+
+        await client.query(`
+          UPDATE contact SET
+          display_phone = $1, address = $2, hours_weekday = $3, hours_saturday = $4, hours_sunday = $5
+          WHERE professional_id = 1
+        `, [
+          newData.contact.displayPhone, newData.contact.address,
+          newData.contact.hoursWeekday, newData.contact.hoursSaturday, newData.contact.hoursSunday
+        ]);
+
+        await client.query('COMMIT');
+      } catch (e) {
+        await client.query('ROLLBACK');
+        throw e;
+      } finally {
+        client.release();
+      }
+
       return { statusCode: 200, body: JSON.stringify({ success: true }) };
     } catch (error) {
       return { statusCode: 401, body: JSON.stringify({ error: 'Invalid token or update failed' }) };
     }
-  } 
-  
-  else {
-    return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
+
+  return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
 };

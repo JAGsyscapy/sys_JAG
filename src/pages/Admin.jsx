@@ -119,9 +119,12 @@ export default function Admin() {
     <div className="min-h-screen bg-gray-50 p-6 md:p-12 font-sans pb-40">
       <div className="max-w-6xl mx-auto space-y-12">
         <header className="flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-center md:text-left">
-            <h1 className="text-4xl font-black text-text-main tracking-tighter italic">Dashboard Administrativo</h1>
-            <p className="text-xs font-bold text-text-main/30 uppercase tracking-[0.3em] mt-1">Gestión de datos en tiempo real</p>
+          <div className="text-center md:text-left flex items-center gap-4">
+            <img src="/logopsichort.jpeg" alt="Logo Admin" className="h-14 w-14 rounded-xl shadow-sm hidden md:block" />
+            <div>
+              <h1 className="text-4xl font-black text-text-main tracking-tighter italic">Dashboard Administrativo</h1>
+              <p className="text-xs font-bold text-text-main/30 uppercase tracking-[0.3em] mt-1">Gestión de datos normalizados</p>
+            </div>
           </div>
           <button onClick={() => {localStorage.removeItem('token'); setToken(null); navigate('/')}} className="bg-white text-red-500 px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest border border-red-50 border-b-4 hover:border-b-2 transition-all">
             Cerrar Sesión
@@ -144,8 +147,8 @@ export default function Admin() {
               <Input label="Título de Subtítulo" value={data.hero.subtitle} onChange={v => setData({...data, hero: {...data.hero, subtitle: v}})} />
               <Input label="Propuesta de Terapia" value={data.hero.therapy} onChange={v => setData({...data, hero: {...data.hero, therapy: v}})} />
               <div className="space-y-2">
-                <span className="text-[10px] font-black uppercase text-gray-400 ml-2">Imagen Hero</span>
-                <input type="file" className="w-full text-sm file:bg-bg-main file:border-none file:rounded-xl file:px-4 file:py-2 file:font-bold" onChange={e => setImageFile(e.target.files[0])} />
+                <span className="text-[10px] font-black uppercase text-gray-400 ml-2">Imagen Personal (Opcional)</span>
+                <input type="file" className="w-full text-sm file:bg-bg-main file:border-none file:rounded-xl file:px-4 file:py-2 file:font-bold file:text-text-main" onChange={e => setImageFile(e.target.files[0])} />
               </div>
             </div>
           </Modal>
@@ -205,18 +208,18 @@ export default function Admin() {
 }
 
 const AdminCard = ({ title, subtitle, onClick }) => (
-  <button onClick={onClick} className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm hover:shadow-2xl hover:border-accent-green/20 hover:-translate-y-1 transition-all text-left group">
+  <button onClick={onClick} className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm hover:shadow-2xl hover:border-accent-green/20 hover:-translate-y-1 transition-all text-left group w-full">
     <div className="w-10 h-10 bg-bg-main rounded-xl mb-4 group-hover:bg-accent-green/10 transition-colors flex items-center justify-center text-accent-green">
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
     </div>
-    <h4 className="text-lg font-black tracking-tight">{title}</h4>
-    <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest mt-1">{subtitle}</p>
+    <h4 className="text-lg font-black tracking-tight text-text-main">{title}</h4>
+    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">{subtitle}</p>
   </button>
 );
 
 const Input = ({ label, value, onChange }) => (
   <div className="space-y-2">
     <span className="text-[10px] font-black uppercase text-gray-400 ml-2">{label}</span>
-    <input className="w-full bg-gray-50 p-4 rounded-2xl outline-none focus:ring-2 ring-accent-green/20 font-bold" value={value} onChange={e => onChange(e.target.value)} />
+    <input className="w-full bg-gray-50 p-4 rounded-2xl outline-none focus:ring-2 ring-accent-green/20 font-bold text-text-main" value={value} onChange={e => onChange(e.target.value)} />
   </div>
 );
