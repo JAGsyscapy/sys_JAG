@@ -9,13 +9,20 @@ export default function Admin() {
   const [activeModal, setActiveModal] = useState(null);
   const [saving, setSaving] = useState(false);
   const [imageFile, setImageFile] = useState(null);
+  
+  const [newGalImg, setNewGalImg] = useState(null);
+  const [newGalTitle, setNewGalTitle] = useState('');
+
   const navigate = useNavigate();
 
   useEffect(() => {
     if (token) {
       fetch('/api/data')
         .then(res => res.json())
-        .then(setData)
+        .then(resData => {
+          if (!resData.gallery) resData.gallery = [];
+          setData(resData);
+        })
         .catch(() => {
           localStorage.removeItem('token');
           setToken(null);
@@ -39,40 +46,79 @@ export default function Admin() {
     }
   };
 
+  const uploadToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'TU_PRESET_AQUI'); 
+    
+    const res = await fetch('https://api.cloudinary.com/v1_1/TU_CLOUD_NAME_AQUI/image/upload', {
+      method: 'POST',
+      body: formData
+    });
+    const json = await res.json();
+    return json.secure_url;
+  };
+
   const saveChanges = async () => {
     setSaving(true);
     let currentImage = data.hero.image;
 
-    if (imageFile) {
-      const formData = new FormData();
-      formData.append('file', imageFile);
-      formData.append('upload_preset', 'psicologo_web');
-      
-      const resImg = await fetch('https://api.cloudinary.com/v1_1/do0tzxctb/image/upload', {
-        method: 'POST',
-        body: formData
+    try {
+      if (imageFile) {
+        currentImage = await uploadToCloudinary(imageFile);
+      }
+
+      const finalGallery = [];
+      for (const item of data.gallery) {
+        if (item.file) {
+          const url = await uploadToCloudinary(item.file);
+          finalGallery.push({ url, title: item.title });
+        } else {
+          finalGallery.push({ url: item.url, title: item.title });
+        }
+      }
+
+      const payload = { 
+        ...data, 
+        hero: { ...data.hero, image: currentImage },
+        gallery: finalGallery
+      };
+
+      const res = await fetch('/api/data', {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
       });
-      const resJson = await resImg.json();
-      currentImage = resJson.secure_url;
-    }
 
-    const payload = { ...data, hero: { ...data.hero, image: currentImage } };
-
-    const res = await fetch('/api/data', {
-      method: 'PUT',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (res.ok) {
-      setData(payload);
+      if (res.ok) {
+        setData(payload);
+        setActiveModal(null);
+        setImageFile(null);
+      }
+    } catch (error) {
+      alert('Hubo un error al guardar las imágenes.');
+    } finally {
       setSaving(false);
-      setActiveModal(null);
-      setImageFile(null);
     }
+  };
+
+  const handleAddGalleryItem = () => {
+    if (!newGalImg) return alert('Selecciona una imagen');
+    const preview = URL.createObjectURL(newGalImg);
+    setData({
+      ...data,
+      gallery: [...data.gallery, { file: newGalImg, title: newGalTitle, preview }]
+    });
+    setNewGalImg(null);
+    setNewGalTitle('');
+  };
+
+  const handleRemoveGalleryItem = (index) => {
+    const newGallery = data.gallery.filter((_, i) => i !== index);
+    setData({ ...data, gallery: newGallery });
   };
 
   if (!token) {
@@ -102,7 +148,7 @@ export default function Admin() {
 
   const Modal = ({ title, children }) => (
     <div className="fixed inset-0 bg-text-main/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-2xl rounded-[2rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+      <div className="bg-white w-full max-w-4xl rounded-[2rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
         <div className="p-6 md:p-8 border-b border-gray-200 flex justify-between items-center bg-gray-50">
           <h3 className="text-2xl font-black text-text-main">{title}</h3>
           <button onClick={() => setActiveModal(null)} className="text-gray-500 hover:text-red-600 font-black text-sm uppercase tracking-widest px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200">Cerrar</button>
@@ -113,7 +159,7 @@ export default function Admin() {
         <div className="p-6 md:p-8 bg-gray-50 border-t border-gray-200 flex justify-end gap-4">
           <button onClick={() => setActiveModal(null)} className="px-6 py-3 font-black text-gray-500 hover:text-text-main">Cancelar</button>
           <button onClick={saveChanges} disabled={saving} className="bg-accent-green text-white px-8 py-3 rounded-xl font-black text-sm uppercase tracking-widest shadow-md hover:bg-green-600 disabled:opacity-50">
-            {saving ? 'Guardando...' : 'Aplicar Cambios'}
+            {saving ? 'Guardando/Subiendo...' : 'Aplicar Cambios'}
           </button>
         </div>
       </div>
@@ -143,6 +189,7 @@ export default function Admin() {
           <AdminCard title="Tarifas" subtitle="Precios y Promociones" onClick={() => setActiveModal('pricing')} />
           <AdminCard title="Contacto" subtitle="Teléfono y Dirección" onClick={() => setActiveModal('contact')} />
           <AdminCard title="Horarios" subtitle="Disponibilidad Diaria" onClick={() => setActiveModal('hours')} />
+          <AdminCard title="Galería de Fotos" subtitle="Añadir o Quitar Imágenes" onClick={() => setActiveModal('gallery')} />
         </div>
 
         {activeModal === 'hero' && (
@@ -190,7 +237,7 @@ export default function Admin() {
                       const newServices = data.services.filter((_, index) => index !== i);
                       setData({...data, services: newServices});
                     }}
-                    className="bg-red-50 border border-red-200 text-red-600 w-14 h-14 flex items-center justify-center rounded-xl font-black text-xl hover:bg-red-100 transition-colors"
+                    className="bg-red-50 border border-red-200 text-red-600 w-14 h-14 flex items-center justify-center rounded-xl font-black text-xl hover:bg-red-100 transition-colors shrink-0"
                   >
                     ×
                   </button>
@@ -236,6 +283,51 @@ export default function Admin() {
               <Input label="Sábado" value={data.contact.saturday} onChange={v => setData({...data, contact: {...data.contact, saturday: v}})} />
               <div className="sm:col-span-2">
                 <Input label="Domingo" value={data.contact.sunday} onChange={v => setData({...data, contact: {...data.contact, sunday: v}})} />
+              </div>
+            </div>
+          </Modal>
+        )}
+
+        {activeModal === 'gallery' && (
+          <Modal title="Gestor de Galería">
+            <div className="space-y-8">
+              <div className="bg-gray-50 border border-gray-200 p-6 rounded-2xl space-y-4">
+                <h4 className="font-black uppercase tracking-widest text-xs text-text-main">Añadir nueva imagen</h4>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex-1 space-y-2">
+                    <input type="text" placeholder="Título o descripción" className="w-full bg-white border border-gray-300 p-3 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-sm text-text-main" value={newGalTitle} onChange={e => setNewGalTitle(e.target.value)} />
+                    <input type="file" accept="image/*" className="w-full text-sm font-bold file:bg-gray-200 file:border-none file:rounded-xl file:px-4 file:py-2 file:mr-4 file:font-black file:text-text-main hover:file:bg-gray-300" onChange={e => setNewGalImg(e.target.files[0])} />
+                  </div>
+                  <button onClick={handleAddGalleryItem} className="bg-text-main text-white px-6 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-black transition-colors shrink-0 h-12 sm:h-auto">
+                    Agregar a lista
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-black uppercase tracking-widest text-xs text-gray-500 mb-4">Imágenes Actuales en Lista</h4>
+                {data.gallery.length === 0 ? (
+                  <p className="text-sm font-bold text-gray-400 border-2 border-dashed border-gray-200 p-8 text-center rounded-2xl">La galería está vacía.</p>
+                ) : (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    {data.gallery.map((img, i) => (
+                      <div key={i} className="group relative bg-white rounded-xl overflow-hidden border border-gray-200 shadow-sm aspect-square flex flex-col">
+                        <img src={img.url || img.preview} alt={img.title} className="w-full h-full object-cover flex-1" />
+                        <div className="p-3 bg-white border-t border-gray-100">
+                          <p className="text-xs font-bold text-text-main truncate" title={img.title}>{img.title || 'Sin título'}</p>
+                        </div>
+                        <button onClick={() => handleRemoveGalleryItem(i)} className="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 flex items-center justify-center rounded-full font-black opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110 shadow-lg">
+                          ×
+                        </button>
+                        {img.file && (
+                          <div className="absolute top-2 left-2 bg-accent-yellow text-text-main text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-sm">
+                            Nueva
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </Modal>

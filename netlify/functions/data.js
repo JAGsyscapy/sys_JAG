@@ -21,6 +21,9 @@ export const handler = async (event, context) => {
       const contactRes = await pool.query('SELECT * FROM contact WHERE professional_id = 1');
       const contact = contactRes.rows[0];
 
+      const galleryRes = await pool.query('SELECT url, title FROM gallery WHERE professional_id = 1');
+      const gallery = galleryRes.rows;
+
       const responseData = {
         hero: {
           name: prof.name,
@@ -50,7 +53,8 @@ export const handler = async (event, context) => {
           friday: contact.friday,
           saturday: contact.saturday,
           sunday: contact.sunday
-        }
+        },
+        gallery: gallery
       };
 
       return { statusCode: 200, body: JSON.stringify(responseData) };
@@ -86,6 +90,15 @@ export const handler = async (event, context) => {
         await client.query('DELETE FROM service WHERE professional_id = 1');
         for (const s of newData.services) {
           if (s) await client.query('INSERT INTO service (professional_id, name) VALUES (1, $1)', [s]);
+        }
+
+        await client.query('DELETE FROM gallery WHERE professional_id = 1');
+        if (newData.gallery && newData.gallery.length > 0) {
+          for (const item of newData.gallery) {
+            if (item.url) {
+              await client.query('INSERT INTO gallery (professional_id, url, title) VALUES (1, $1, $2)', [item.url, item.title]);
+            }
+          }
         }
 
         await client.query(`

@@ -65,10 +65,15 @@ export default function Home() {
           <p className="text-xl text-text-main max-w-2xl mx-auto leading-relaxed font-semibold">
             {data.hero.therapy}. Especialista en Terapia Cognitivo Conductual para adolescentes y adultos.
           </p>
-          <div className="pt-4">
+          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
             <a href="#servicios" className="inline-block bg-white border border-gray-200 text-text-main font-black uppercase text-sm tracking-widest px-8 py-4 rounded-full shadow-sm hover:border-accent-orange hover:text-accent-orange transition-colors">
               Explorar Servicios ↓
             </a>
+            {data.gallery && data.gallery.length > 0 && (
+              <a href="#galeria" className="inline-block bg-transparent text-text-main font-black uppercase text-sm tracking-widest px-8 py-4 hover:text-accent-green transition-colors">
+                Ver Galería
+              </a>
+            )}
           </div>
         </div>
       </section>
@@ -116,6 +121,27 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {data.gallery && data.gallery.length > 0 && (
+        <section id="galeria" className="max-w-6xl mx-auto px-6 py-20 space-y-16 scroll-mt-24 border-t border-gray-200">
+          <div className="text-center space-y-3">
+            <h3 className="text-4xl font-black text-text-main">Nuestras Instalaciones</h3>
+            <p className="text-text-main font-semibold text-lg">Un espacio seguro y diseñado para tu comodidad.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {data.gallery.map((img, i) => (
+              <div key={i} className="group relative rounded-[2rem] overflow-hidden bg-white shadow-md border border-gray-200">
+                <div className="aspect-[4/3] w-full">
+                  <img src={img.url} alt={img.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                  <span className="text-white font-bold text-lg">{img.title}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <footer id="contacto" className="bg-text-main text-bg-main pt-32 pb-12 mt-20 rounded-t-[4rem]">
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-20">
