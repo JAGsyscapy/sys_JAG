@@ -7,12 +7,20 @@ export default function Admin() {
   const [data, setData] = useState(null);
   const [saving, setSaving] = useState(false);
   const [imageFile, setImageFile] = useState(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     if (token) {
       fetch('/api/data')
-        .then(res => res.json())
-        .then(setData);
+        .then(res => {
+          if (!res.ok) throw new Error('Network Error');
+          return res.json();
+        })
+        .then(resData => {
+          if (resData.error || !resData.hero) throw new Error('Data Invalid');
+          setData(resData);
+        })
+        .catch(() => setError(true));
     }
   }, [token]);
 
@@ -76,7 +84,16 @@ export default function Admin() {
     );
   }
 
-  if (!data) return <div className="p-10">Cargando datos...</div>;
+  if (error) {
+    return (
+      <div className="p-10 text-center">
+        <h2 className="text-red-600 font-bold text-2xl">Error de Base de Datos</h2>
+        <button onClick={() => {localStorage.removeItem('token'); setToken(null)}} className="mt-4 bg-text-main text-white px-4 py-2 rounded">Volver al Login</button>
+      </div>
+    );
+  }
+
+  if (!data) return <div className="p-10 text-center font-bold text-xl">Cargando datos...</div>;
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8 bg-white my-10 rounded-xl shadow-lg">

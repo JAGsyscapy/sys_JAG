@@ -2,14 +2,38 @@ import { useEffect, useState } from 'react';
 
 export default function Home() {
   const [data, setData] = useState(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     fetch('/api/data')
-      .then(res => res.json())
-      .then(setData);
+      .then(res => {
+        if (!res.ok) throw new Error('Error Network');
+        return res.json();
+      })
+      .then(resData => {
+        if (resData.error || !resData.hero) throw new Error('Data Invalida');
+        setData(resData);
+      })
+      .catch(() => setError(true));
   }, []);
 
-  if (!data) return <div className="min-h-screen flex items-center justify-center">Cargando...</div>;
+  if (error) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
+        <h2 className="text-3xl font-bold text-red-600 mb-4">Error de Conexión</h2>
+        <p className="text-lg">No se pudo conectar a la base de datos NeonDB.</p>
+        <p className="text-lg">Verifica que agregaste DATABASE_URL en las variables de entorno de Netlify.</p>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-2xl font-bold text-text-main animate-pulse">Cargando...</p>
+      </div>
+    );
+  }
 
   const whatsappLink = `https://wa.me/52${data.hero.phone}?text=CITA`;
 
