@@ -7,7 +7,6 @@ const pool = new Pool({
 });
 
 export const handler = async (event, context) => {
-  // Manejo de petición GET
   if (event.httpMethod === 'GET') {
     try {
       const { rows } = await pool.query('SELECT content FROM website_data WHERE id = 1');
@@ -20,17 +19,15 @@ export const handler = async (event, context) => {
     }
   } 
   
-  // Manejo de petición PUT (Guardar cambios)
   else if (event.httpMethod === 'PUT') {
     try {
-      // Netlify a veces manda los headers en minúsculas, así que comprobamos ambos
       const authHeader = event.headers.authorization || event.headers.Authorization;
       if (!authHeader) return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
       
       const token = authHeader.split(' ')[1];
-      jwt.verify(token, process.env.JWT_SECRET); // Verifica que el token sea válido
+      jwt.verify(token, process.env.JWT_SECRET); 
       
-      const newData = JSON.parse(event.body); // En Netlify el body viene como string
+      const newData = JSON.parse(event.body); 
       await pool.query('UPDATE website_data SET content = $1 WHERE id = 1', [newData]);
       
       return { statusCode: 200, body: JSON.stringify({ success: true }) };
@@ -39,7 +36,6 @@ export const handler = async (event, context) => {
     }
   } 
   
-  // Método no permitido
   else {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
