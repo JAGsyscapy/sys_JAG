@@ -42,7 +42,7 @@ export default function Home() {
       <nav className="fixed top-0 w-full bg-white/70 backdrop-blur-xl z-50 border-b border-text-main/5">
         <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/logopsichort.jpeg" alt="Logo" className="h-12 w-12 rounded-xl object-cover shadow-sm" />
+            <img src="/assets/logopsichort.jpeg" alt="Logo" className="h-12 w-12 rounded-xl object-cover shadow-sm" />
             <span className="font-black text-xl tracking-tighter hidden sm:block">{data.hero.name}</span>
           </div>
           <div className="flex items-center gap-6">
