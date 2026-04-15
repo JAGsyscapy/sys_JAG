@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import logoPsic from '../assets/logopsichort.jpeg';
 
 export default function Admin() {
   const [token, setToken] = useState(localStorage.getItem('token'));
@@ -120,7 +121,7 @@ export default function Admin() {
       <div className="max-w-6xl mx-auto space-y-12">
         <header className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-center md:text-left flex items-center gap-4">
-            <img src="/logopsichort.jpeg" alt="Logo Admin" className="h-14 w-14 rounded-xl shadow-sm hidden md:block" />
+            <img src={logoPsic} alt="Logo Admin" className="h-14 w-14 rounded-xl shadow-sm hidden md:block" />
             <div>
               <h1 className="text-4xl font-black text-text-main tracking-tighter italic">Dashboard Administrativo</h1>
               <p className="text-xs font-bold text-text-main/30 uppercase tracking-[0.3em] mt-1">Gestión de datos normalizados</p>
@@ -137,7 +138,7 @@ export default function Admin() {
           <AdminCard title="Servicios" subtitle="Lista de Especialidades" onClick={() => setActiveModal('services')} />
           <AdminCard title="Tarifas" subtitle="Precios y Promociones" onClick={() => setActiveModal('pricing')} />
           <AdminCard title="Contacto" subtitle="Teléfono y Dirección" onClick={() => setActiveModal('contact')} />
-          <AdminCard title="Horarios" subtitle="Días y Horas" onClick={() => setActiveModal('hours')} />
+          <AdminCard title="Horarios" subtitle="Disponibilidad Diaria" onClick={() => setActiveModal('hours')} />
         </div>
 
         {activeModal === 'hero' && (
@@ -195,10 +196,16 @@ export default function Admin() {
 
         {activeModal === 'hours' && (
           <Modal title="Editar Horarios">
-            <div className="space-y-4">
-              <Input label="Lunes a Viernes" value={data.contact.hoursWeekday} onChange={v => setData({...data, contact: {...data.contact, hoursWeekday: v}})} />
-              <Input label="Sábados" value={data.contact.hoursSaturday} onChange={v => setData({...data, contact: {...data.contact, hoursSaturday: v}})} />
-              <Input label="Domingos" value={data.contact.hoursSunday} onChange={v => setData({...data, contact: {...data.contact, hoursSunday: v}})} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Input label="Lunes" value={data.contact.monday} onChange={v => setData({...data, contact: {...data.contact, monday: v}})} />
+              <Input label="Martes" value={data.contact.tuesday} onChange={v => setData({...data, contact: {...data.contact, tuesday: v}})} />
+              <Input label="Miércoles" value={data.contact.wednesday} onChange={v => setData({...data, contact: {...data.contact, wednesday: v}})} />
+              <Input label="Jueves" value={data.contact.thursday} onChange={v => setData({...data, contact: {...data.contact, thursday: v}})} />
+              <Input label="Viernes" value={data.contact.friday} onChange={v => setData({...data, contact: {...data.contact, friday: v}})} />
+              <Input label="Sábado" value={data.contact.saturday} onChange={v => setData({...data, contact: {...data.contact, saturday: v}})} />
+              <div className="sm:col-span-2">
+                <Input label="Domingo" value={data.contact.sunday} onChange={v => setData({...data, contact: {...data.contact, sunday: v}})} />
+              </div>
             </div>
           </Modal>
         )}

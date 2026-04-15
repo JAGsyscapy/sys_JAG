@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import logoPsic from '../assets/logopsichort.jpeg';
 
 export default function Home() {
   const [data, setData] = useState(null);
@@ -42,7 +43,7 @@ export default function Home() {
       <nav className="fixed top-0 w-full bg-white/70 backdrop-blur-xl z-50 border-b border-text-main/5">
         <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/assets/logopsichort.jpeg" alt="Logo" className="h-12 w-12 rounded-xl object-cover shadow-sm" />
+            <img src={logoPsic} alt="Logo" className="h-12 w-12 rounded-xl object-cover shadow-sm" />
             <span className="font-black text-xl tracking-tighter hidden sm:block">{data.hero.name}</span>
           </div>
           <div className="flex items-center gap-6">
@@ -120,7 +121,7 @@ export default function Home() {
       <footer id="contacto" className="bg-text-main text-bg-main pt-32 pb-12 mt-20 rounded-t-[4rem]">
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-20">
           <div className="space-y-8">
-            <img src="/logopsichort.jpeg" alt="Logo Footer" className="h-16 w-16 rounded-2xl object-cover grayscale brightness-200" />
+            <img src={logoPsic} alt="Logo Footer" className="h-16 w-16 rounded-2xl object-cover grayscale brightness-200" />
             <p className="opacity-50 text-sm leading-relaxed font-medium">
               Comprometidos con la salud mental de la comunidad de Querétaro a través de evidencia científica y calidez humana.
             </p>
@@ -135,9 +136,13 @@ export default function Home() {
           <div className="space-y-8">
             <h4 className="text-xs font-black uppercase tracking-[0.3em] text-accent-orange">Disponibilidad</h4>
             <ul className="space-y-4 text-sm font-bold">
-              <li className="flex justify-between border-b border-white/5 pb-2"><span>Lun - Vie</span> <span>{data.contact.hoursWeekday}</span></li>
-              <li className="flex justify-between border-b border-white/5 pb-2"><span>Sábados</span> <span>{data.contact.hoursSaturday}</span></li>
-              <li className="flex justify-between text-accent-yellow"><span>Domingos</span> <span>Cerrado</span></li>
+              <li className="flex justify-between border-b border-white/5 pb-2"><span>Lunes</span> <span>{data.contact.monday}</span></li>
+              <li className="flex justify-between border-b border-white/5 pb-2"><span>Martes</span> <span>{data.contact.tuesday}</span></li>
+              <li className="flex justify-between border-b border-white/5 pb-2"><span>Miércoles</span> <span>{data.contact.wednesday}</span></li>
+              <li className="flex justify-between border-b border-white/5 pb-2"><span>Jueves</span> <span>{data.contact.thursday}</span></li>
+              <li className="flex justify-between border-b border-white/5 pb-2"><span>Viernes</span> <span>{data.contact.friday}</span></li>
+              <li className="flex justify-between border-b border-white/5 pb-2"><span>Sábado</span> <span>{data.contact.saturday}</span></li>
+              <li className="flex justify-between text-accent-yellow"><span>Domingo</span> <span>{data.contact.sunday}</span></li>
             </ul>
           </div>
         </div>
