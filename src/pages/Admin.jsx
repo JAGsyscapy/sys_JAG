@@ -48,9 +48,9 @@ export default function Admin() {
   const uploadToCloudinary = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('upload_preset', 'TU_PRESET_AQUI'); 
+    formData.append('upload_preset', 'psicologo_web'); 
     
-    const res = await fetch('https://api.cloudinary.com/v1_1/TU_CLOUD_NAME_AQUI/image/upload', {
+    const res = await fetch('https://api.cloudinary.com/v1_1/do0tzxctb/image/upload', {
       method: 'POST',
       body: formData
     });
