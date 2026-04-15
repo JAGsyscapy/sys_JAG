@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
   const [data, setData] = useState(null);
@@ -7,11 +8,11 @@ export default function Home() {
   useEffect(() => {
     fetch('/api/data')
       .then(res => {
-        if (!res.ok) throw new Error('Error Network');
+        if (!res.ok) throw new Error();
         return res.json();
       })
       .then(resData => {
-        if (resData.error || !resData.hero) throw new Error('Data Invalida');
+        if (resData.error || !resData.hero) throw new Error();
         setData(resData);
       })
       .catch(() => setError(true));
@@ -19,17 +20,17 @@ export default function Home() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
-        <h2 className="text-3xl font-bold text-red-600 mb-4">Error de Conexión</h2>
-        <p className="text-lg">No se pudo cargar la información del consultorio.</p>
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-bg-main">
+        <h2 className="text-3xl font-black text-accent-orange mb-4">Aviso de Sistema</h2>
+        <p className="text-lg text-text-main/60">No pudimos conectar con la base de datos.</p>
       </div>
     );
   }
 
   if (!data) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-accent-green border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen flex items-center justify-center bg-bg-main">
+        <div className="w-10 h-10 border-4 border-accent-green border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -37,115 +38,114 @@ export default function Home() {
   const whatsappLink = `https://wa.me/52${data.hero.phone}?text=CITA`;
 
   return (
-    <div className="min-h-screen bg-bg-main text-text-main pb-12">
-      {/* Hero Section */}
-      <header className="bg-white/40 backdrop-blur-sm border-b border-text-main/10 pt-20 pb-16 px-6 text-center shadow-sm">
-        <div className="max-w-4xl mx-auto space-y-6">
-          <h1 className="text-4xl md:text-6xl font-black text-text-main tracking-tight">
-            {data.hero.name}
-          </h1>
-          <h2 className="text-xl md:text-2xl font-semibold text-accent-green">
-            {data.hero.subtitle}
-          </h2>
-          <p className="text-lg md:text-xl text-text-main/80 max-w-2xl mx-auto">
-            {data.hero.therapy}
-          </p>
-          
-          <div className="pt-8">
-            <a 
-              href={whatsappLink} 
-              target="_blank" 
-              rel="noreferrer" 
-              className="inline-flex items-center gap-2 bg-whatsapp text-white font-bold py-4 px-10 rounded-full hover:scale-105 transition-all shadow-lg hover:shadow-xl text-lg"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.347-.272.297-1.04 1.016-1.04 2.479 0 1.463 1.065 2.876 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-              Agenda tu cita
+    <div className="min-h-screen bg-bg-main text-text-main font-sans selection:bg-accent-yellow/30">
+      <nav className="fixed top-0 w-full bg-white/70 backdrop-blur-xl z-50 border-b border-text-main/5">
+        <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img src="/logopsichort.jpeg" alt="Logo" className="h-12 w-12 rounded-xl object-cover shadow-sm" />
+            <span className="font-black text-xl tracking-tighter hidden sm:block">{data.hero.name}</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <a href={whatsappLink} target="_blank" rel="noreferrer" className="bg-whatsapp text-white px-6 py-2.5 rounded-2xl font-bold text-sm shadow-lg shadow-whatsapp/20 hover:scale-105 transition-all">
+              Agendar Cita
             </a>
           </div>
         </div>
-      </header>
+      </nav>
 
-      <main className="max-w-5xl mx-auto px-6 py-16 space-y-20">
-        
-        {/* Sobre el Especialista */}
-        <section className="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-text-main/5 flex flex-col md:flex-row gap-10 items-center">
-          <div className="flex-1 space-y-6">
-            <h3 className="text-3xl font-bold text-text-main flex items-center gap-3">
-              <span className="w-4 h-4 rounded-full bg-accent-orange"></span>
-              Sobre el Especialista
-            </h3>
-            <div className="space-y-4 text-lg">
-              <p><strong className="text-accent-orange">Formación:</strong> {data.about.education}</p>
-              <p><strong className="text-accent-orange">Enfoque Clínico:</strong> {data.about.approach}</p>
-              <p><strong className="text-accent-orange">Objetivo:</strong> {data.about.objective}</p>
-              <p><strong className="text-accent-orange">Público:</strong> {data.about.target}</p>
-            </div>
+      <section className="pt-40 pb-20 px-6">
+        <div className="max-w-4xl mx-auto text-center space-y-10">
+          <div className="inline-flex items-center gap-2 bg-white/50 border border-text-main/5 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest text-accent-orange shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-accent-orange animate-pulse"></span>
+            Consulta Presencial en Querétaro
           </div>
-        </section>
+          <h1 className="text-5xl md:text-7xl font-black text-text-main leading-[1.1] tracking-tight">
+            Encuentra el equilibrio <br /> <span className="text-accent-green italic">que necesitas.</span>
+          </h1>
+          <p className="text-xl text-text-main/60 max-w-2xl mx-auto leading-relaxed font-medium">
+            {data.hero.therapy}. Especialista en Terapia Cognitivo Conductual para adolescentes y adultos.
+          </p>
+          <div className="pt-4">
+            <a href="#contacto" className="text-text-main/40 font-bold uppercase text-xs tracking-[0.2em] hover:text-accent-orange transition-colors">
+              Explorar Servicios ↓
+            </a>
+          </div>
+        </div>
+      </section>
 
-        {/* Servicios */}
-        <section>
-          <h3 className="text-3xl font-bold mb-10 text-center text-text-main">Especialidades que atiende</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.services.map((service, idx) => (
-              <div key={idx} className="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-accent-green hover:-translate-y-1 transition-transform">
-                <p className="font-semibold text-lg text-text-main">{service}</p>
+      <section className="max-w-6xl mx-auto px-6 py-12">
+        <div className="bg-white rounded-[3rem] p-10 md:p-20 shadow-2xl shadow-text-main/5 grid md:grid-cols-2 gap-16 items-center border border-text-main/5">
+          <div className="space-y-10">
+            <h3 className="text-4xl font-black text-text-main tracking-tight leading-none">
+              Atención profesional <br /> <span className="text-accent-orange">con enfoque humano.</span>
+            </h3>
+            <div className="space-y-8">
+              <div className="group">
+                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-main/30 mb-2">Formación</h4>
+                <p className="text-lg font-bold group-hover:text-accent-green transition-colors">{data.about.education}</p>
               </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Tarifas */}
-        <section className="bg-white/60 p-10 rounded-3xl text-center shadow-sm border-t-4 border-accent-yellow relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-accent-yellow/10 rounded-bl-full -z-10"></div>
-          <h3 className="text-3xl font-bold mb-6 text-text-main">Tarifas de Consulta</h3>
-          <div className="flex items-center justify-center gap-6">
-            <span className="line-through text-text-main/50 text-2xl">${data.pricing.regular}</span>
-            <span className="text-5xl font-black text-accent-green">${data.pricing.promo}</span>
-          </div>
-          <div className="mt-4 inline-block bg-accent-orange text-white px-4 py-1 rounded-full text-sm font-bold uppercase tracking-widest shadow-sm">
-            Promoción Actual
-          </div>
-        </section>
-
-      </main>
-
-      {/* Footer / Contacto */}
-      <footer className="max-w-5xl mx-auto px-6">
-        <div className="grid md:grid-cols-2 gap-10 bg-text-main text-bg-main p-10 md:p-14 rounded-3xl shadow-xl">
-          <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-accent-yellow flex items-center gap-2">
-              Ubicación y Contacto
-            </h3>
-            <div className="space-y-3">
-              <p className="flex items-center gap-3">
-                <strong className="text-accent-orange">Teléfono:</strong> 
-                <span className="text-lg">{data.contact.displayPhone}</span>
-              </p>
-              <p className="flex items-start gap-3">
-                <strong className="text-accent-orange mt-1">Dirección:</strong> 
-                <span className="leading-relaxed">{data.contact.address}</span>
-              </p>
+              <div className="group">
+                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-main/30 mb-2">Enfoque</h4>
+                <p className="text-lg font-bold group-hover:text-accent-green transition-colors">{data.about.approach}</p>
+              </div>
+              <div className="group">
+                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-main/30 mb-2">Objetivo</h4>
+                <p className="text-lg font-bold group-hover:text-accent-green transition-colors">{data.about.objective}</p>
+              </div>
             </div>
           </div>
-          
-          <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-accent-yellow">Horarios de Atención</h3>
-            <ul className="space-y-3">
-              <li className="flex justify-between border-b border-bg-main/20 pb-2">
-                <span>Lunes a Viernes</span>
-                <strong>{data.contact.hoursWeekday}</strong>
-              </li>
-              <li className="flex justify-between border-b border-bg-main/20 pb-2">
-                <span>Sábado</span>
-                <strong>{data.contact.hoursSaturday}</strong>
-              </li>
-              <li className="flex justify-between pb-2 text-accent-orange font-semibold">
-                <span>Domingo</span>
-                <strong>{data.contact.hoursSunday}</strong>
-              </li>
+          <div className="aspect-square bg-bg-main rounded-[2.5rem] overflow-hidden shadow-inner border border-text-main/5">
+            {data.hero.image && <img src={data.hero.image} alt="Consultorio" className="w-full h-full object-cover" />}
+          </div>
+        </div>
+      </section>
+
+      <section className="max-w-6xl mx-auto px-6 py-20 space-y-16">
+        <div className="text-center space-y-3">
+          <h3 className="text-3xl font-black">Especialidades</h3>
+          <p className="text-text-main/40 font-medium">Tratamientos enfocados en resultados y bienestar.</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {data.services.map((s, i) => (
+            <div key={i} className="bg-white p-8 rounded-[2rem] border border-text-main/5 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all">
+              <div className="w-10 h-10 bg-accent-yellow/20 rounded-xl mb-6 flex items-center justify-center text-accent-orange font-black">
+                {i + 1}
+              </div>
+              <p className="font-black text-lg leading-tight">{s}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <footer id="contacto" className="bg-text-main text-bg-main pt-32 pb-12 mt-20 rounded-t-[4rem]">
+        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-20">
+          <div className="space-y-8">
+            <img src="/logopsichort.jpeg" alt="Logo Footer" className="h-16 w-16 rounded-2xl object-cover grayscale brightness-200" />
+            <p className="opacity-50 text-sm leading-relaxed font-medium">
+              Comprometidos con la salud mental de la comunidad de Querétaro a través de evidencia científica y calidez humana.
+            </p>
+          </div>
+          <div className="space-y-8">
+            <h4 className="text-xs font-black uppercase tracking-[0.3em] text-accent-orange">Ubicación</h4>
+            <div className="space-y-4 font-bold text-lg">
+              <p>{data.contact.displayPhone}</p>
+              <p className="opacity-70 leading-snug text-sm">{data.contact.address}</p>
+            </div>
+          </div>
+          <div className="space-y-8">
+            <h4 className="text-xs font-black uppercase tracking-[0.3em] text-accent-orange">Disponibilidad</h4>
+            <ul className="space-y-4 text-sm font-bold">
+              <li className="flex justify-between border-b border-white/5 pb-2"><span>Lun - Vie</span> <span>{data.contact.hoursWeekday}</span></li>
+              <li className="flex justify-between border-b border-white/5 pb-2"><span>Sábados</span> <span>{data.contact.hoursSaturday}</span></li>
+              <li className="flex justify-between text-accent-yellow"><span>Domingos</span> <span>Cerrado</span></li>
             </ul>
           </div>
+        </div>
+        <div className="max-w-6xl mx-auto px-6 mt-32 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between gap-6 items-center">
+          <p className="text-[10px] font-black uppercase tracking-widest opacity-30">© 2026 {data.hero.name}</p>
+          <Link to="/admin" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent-yellow hover:opacity-100 transition-opacity">
+            Acceso Sistema
+          </Link>
         </div>
       </footer>
     </div>
