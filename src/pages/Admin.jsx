@@ -46,8 +46,9 @@ export default function Admin() {
     if (imageFile) {
       const formData = new FormData();
       formData.append('file', imageFile);
-      formData.append('upload_preset', 'tu_cloudinary_preset');
-      const resImg = await fetch('https://api.cloudinary.com/v1_1/tu_cloud_name/image/upload', {
+      formData.append('upload_preset', 'psicologo_web');
+      
+      const resImg = await fetch('https://api.cloudinary.com/v1_1/do0tzxctb/image/upload', {
         method: 'POST',
         body: formData
       });
