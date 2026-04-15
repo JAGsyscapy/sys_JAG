@@ -315,14 +315,27 @@ export default function Admin() {
             <div className="space-y-8">
               <div className="bg-gray-50 border border-gray-200 p-6 rounded-[2rem] space-y-4">
                 <h4 className="font-black uppercase tracking-widest text-xs text-text-main">Añadir nueva imagen</h4>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <div className="flex-1 space-y-3">
-                    <input type="text" placeholder="Título (Opcional)" className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-sm text-text-main" value={newGalTitle} onChange={e => setNewGalTitle(e.target.value)} />
-                    <input type="file" accept="image/*" className="w-full text-sm font-bold file:bg-gray-200 file:border-none file:rounded-xl file:px-4 file:py-2 file:mr-4 file:font-black file:text-text-main hover:file:bg-gray-300" onChange={e => setNewGalImg(e.target.files[0])} />
+                <div className="flex flex-col gap-4">
+                  <input 
+                    type="text" 
+                    placeholder="Título (Opcional)" 
+                    className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-sm text-text-main" 
+                    value={newGalTitle} 
+                    onChange={e => setNewGalTitle(e.target.value)} 
+                  />
+                  <div className="flex items-center gap-4">
+                    <label className="flex-1 cursor-pointer bg-white border border-gray-300 p-4 rounded-xl text-sm font-bold text-gray-500 hover:border-accent-green transition-colors">
+                      {newGalImg ? newGalImg.name : "Seleccionar archivo..."}
+                      <input type="file" accept="image/*" className="hidden" onChange={e => setNewGalImg(e.target.files[0])} />
+                    </label>
+                    <button 
+                      onClick={handleAddGalleryItem} 
+                      disabled={uploading || !newGalImg}
+                      className="bg-text-main text-white px-8 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-black transition-colors disabled:opacity-50"
+                    >
+                      {uploading ? 'Cargando...' : 'Agregar'}
+                    </button>
                   </div>
-                  <button onClick={handleAddGalleryItem} className="bg-text-main text-white px-6 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-black transition-colors shrink-0 h-14 sm:h-auto">
-                    Agregar
-                  </button>
                 </div>
               </div>
 
@@ -343,11 +356,6 @@ export default function Admin() {
                         <button onClick={() => handleRemoveGalleryItem(i)} className="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 flex items-center justify-center rounded-full font-black opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110 shadow-lg">
                           ×
                         </button>
-                        {img.file && (
-                          <div className="absolute top-2 left-2 bg-accent-yellow text-text-main text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-sm">
-                            Nueva
-                          </div>
-                        )}
                       </div>
                     ))}
                   </div>
