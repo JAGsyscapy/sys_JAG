@@ -39,6 +39,10 @@ export default function Home() {
 
   const whatsappLink = `https://wa.me/52${data.hero.phone}?text=CITA`;
 
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text);
+  };
+
   return (
     <div className="min-h-screen bg-bg-main text-text-main font-sans selection:bg-accent-yellow selection:text-text-main relative">
       <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-xl z-50 border-b border-gray-200 shadow-sm">
@@ -171,7 +175,7 @@ export default function Home() {
       <footer id="contacto" className="bg-text-main text-bg-main pt-32 pb-12 mt-20 rounded-t-[4rem]">
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-20">
           <div className="space-y-8">
-            <img src={logoPsic} alt="Logo Footer" className="h-20 w-auto object-contain rounded-xl grayscale brightness-150" />
+            <img src={logoPsic} alt="Logo Footer" className="h-28 w-auto object-contain bg-white px-6 py-4 rounded-3xl" />
             <p className="text-base leading-relaxed font-semibold opacity-90">
               Comprometidos con la salud mental de la comunidad de Querétaro a través de evidencia científica y calidez humana.
             </p>
@@ -180,38 +184,56 @@ export default function Home() {
           <div className="space-y-8">
             <h4 className="text-sm font-black uppercase tracking-widest text-accent-orange">Contacto</h4>
             <div className="space-y-6 font-bold text-base">
-              <div className="flex items-center gap-4">
-                <div className="bg-white/10 p-3 rounded-full animate-bounce shadow-lg text-accent-orange">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                </div>
-                <p className="opacity-90 leading-snug">{data.contact.address}</p>
-              </div>
+              
+              {data.contact.address && (
+                <a 
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.contact.address)}`} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="flex items-center gap-4 group cursor-pointer"
+                >
+                  <div className="bg-white/10 p-3 rounded-full shadow-lg text-accent-orange group-hover:bg-accent-orange group-hover:text-white transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  </div>
+                  <p className="opacity-90 leading-snug group-hover:opacity-100 transition-opacity">{data.contact.address}</p>
+                </a>
+              )}
 
-              <div className="flex items-center gap-4">
-                <div className="bg-white/10 p-3 rounded-full animate-bounce shadow-lg text-accent-green" style={{ animationDelay: '100ms' }}>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                </div>
-                <p>{data.contact.displayPhone}</p>
-              </div>
+              {data.contact.displayPhone && (
+                <a 
+                  href={`tel:${data.contact.displayPhone.replace(/\D/g,'')}`} 
+                  onClick={() => handleCopy(data.contact.displayPhone)} 
+                  className="flex items-center gap-4 group cursor-pointer"
+                >
+                  <div className="bg-white/10 p-3 rounded-full shadow-lg text-accent-green group-hover:bg-accent-green group-hover:text-white transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  </div>
+                  <p className="opacity-90 leading-snug group-hover:opacity-100 transition-opacity">{data.contact.displayPhone}</p>
+                </a>
+              )}
 
               {data.contact.email && (
-                <div className="flex items-center gap-4">
-                  <div className="bg-white/10 p-3 rounded-full animate-bounce shadow-lg text-blue-400" style={{ animationDelay: '200ms' }}>
+                <a 
+                  href={`mailto:${data.contact.email}`} 
+                  onClick={() => handleCopy(data.contact.email)} 
+                  className="flex items-center gap-4 group cursor-pointer"
+                >
+                  <div className="bg-white/10 p-3 rounded-full shadow-lg text-blue-400 group-hover:bg-blue-400 group-hover:text-white transition-colors">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
                   </div>
-                  <p>{data.contact.email}</p>
-                </div>
+                  <p className="opacity-90 leading-snug group-hover:opacity-100 transition-opacity">{data.contact.email}</p>
+                </a>
               )}
             </div>
 
             <div className="flex gap-6 pt-4">
               {data.contact.facebook && (
-                <a href={data.contact.facebook} target="_blank" rel="noreferrer" className="bg-[#1877F2] p-3 rounded-full animate-bounce shadow-lg hover:bg-blue-600 transition-colors" style={{ animationDelay: '300ms' }}>
+                <a href={data.contact.facebook} target="_blank" rel="noreferrer" className="bg-[#1877F2] p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors">
                   <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V7.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                 </a>
               )}
               {data.contact.instagram && (
-                <a href={data.contact.instagram.startsWith('http') ? data.contact.instagram : `https://${data.contact.instagram}`} target="_blank" rel="noreferrer" className="bg-pink-600 p-3 rounded-full animate-bounce shadow-lg hover:bg-pink-700 transition-colors" style={{ animationDelay: '400ms' }}>
+                <a href={data.contact.instagram.startsWith('http') ? data.contact.instagram : `https://${data.contact.instagram}`} target="_blank" rel="noreferrer" className="bg-pink-600 p-3 rounded-full shadow-lg hover:bg-pink-700 transition-colors">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
                 </a>
               )}
@@ -241,30 +263,45 @@ export default function Home() {
 
       <div className="fixed bottom-28 right-6 z-[90] flex flex-col gap-3 items-end pointer-events-none hidden md:flex">
         {data.contact.address && (
-          <div className="bg-white px-4 py-2 rounded-2xl shadow-lg flex items-center gap-3 animate-bounce pointer-events-auto border border-gray-100">
+          <a 
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.contact.address)}`} 
+            target="_blank" 
+            rel="noreferrer" 
+            className="bg-white px-4 py-2 rounded-2xl shadow-lg flex items-center gap-3 animate-bounce pointer-events-auto border border-gray-100 hover:bg-gray-50 transition-colors"
+          >
             <div className="text-accent-orange">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
             </div>
             <p className="text-xs font-bold text-text-main max-w-[150px] truncate">{data.contact.address}</p>
-          </div>
+          </a>
         )}
         
         {data.contact.displayPhone && (
-          <div className="bg-white px-4 py-2 rounded-2xl shadow-lg flex items-center gap-3 animate-bounce pointer-events-auto border border-gray-100" style={{ animationDelay: '100ms' }}>
+          <a 
+            href={`tel:${data.contact.displayPhone.replace(/\D/g,'')}`} 
+            onClick={() => handleCopy(data.contact.displayPhone)}
+            className="bg-white px-4 py-2 rounded-2xl shadow-lg flex items-center gap-3 animate-bounce pointer-events-auto border border-gray-100 hover:bg-gray-50 transition-colors" 
+            style={{ animationDelay: '100ms' }}
+          >
             <div className="text-accent-green">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
             </div>
             <p className="text-xs font-bold text-text-main">{data.contact.displayPhone}</p>
-          </div>
+          </a>
         )}
         
         {data.contact.email && (
-          <div className="bg-white px-4 py-2 rounded-2xl shadow-lg flex items-center gap-3 animate-bounce pointer-events-auto border border-gray-100" style={{ animationDelay: '200ms' }}>
+          <a 
+            href={`mailto:${data.contact.email}`} 
+            onClick={() => handleCopy(data.contact.email)}
+            className="bg-white px-4 py-2 rounded-2xl shadow-lg flex items-center gap-3 animate-bounce pointer-events-auto border border-gray-100 hover:bg-gray-50 transition-colors" 
+            style={{ animationDelay: '200ms' }}
+          >
             <div className="text-blue-400">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
             </div>
             <p className="text-xs font-bold text-text-main">{data.contact.email}</p>
-          </div>
+          </a>
         )}
 
         <div className="flex gap-2 pointer-events-auto" style={{ animationDelay: '300ms' }}>
