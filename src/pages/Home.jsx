@@ -6,6 +6,7 @@ export default function Home() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     fetch('/api/data')
@@ -19,6 +20,32 @@ export default function Home() {
       })
       .catch(() => setError(true));
   }, []);
+
+  const showToast = (message) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const handleCopy = (text, type) => {
+    navigator.clipboard.writeText(text);
+    showToast(`${type} copiado al portapapeles`);
+  };
+
+  const handleEmailClick = (e, email) => {
+    e.preventDefault();
+    handleCopy(email, 'Correo');
+    setTimeout(() => {
+      window.location.href = `mailto:${email}`;
+    }, 500);
+  };
+
+  const handlePhoneClick = (e, phone) => {
+    e.preventDefault();
+    handleCopy(phone, 'Teléfono');
+    setTimeout(() => {
+      window.location.href = `tel:${phone.replace(/\D/g, '')}`;
+    }, 500);
+  };
 
   if (error) {
     return (
@@ -39,24 +66,16 @@ export default function Home() {
 
   const whatsappLink = `https://wa.me/52${data.hero.phone}?text=CITA`;
 
-  const handleCopy = (text) => {
-    navigator.clipboard.writeText(text);
-  };
-
-  const handleEmailClick = (e, email) => {
-    e.preventDefault();
-    handleCopy(email);
-    window.location.href = `mailto:${email}`;
-  };
-
-  const handlePhoneClick = (e, phone) => {
-    e.preventDefault();
-    handleCopy(phone);
-    window.location.href = `tel:${phone.replace(/\D/g, '')}`;
-  };
-
   return (
     <div className="min-h-screen bg-bg-main text-text-main font-sans selection:bg-accent-yellow selection:text-text-main relative">
+      
+      {toast && (
+        <div className="fixed top-10 left-1/2 -translate-x-1/2 z-[300] bg-text-main text-white px-6 py-4 rounded-full shadow-2xl font-black text-sm uppercase tracking-widest flex items-center gap-3 animate-in slide-in-from-top-10 fade-in duration-300">
+          <svg className="w-5 h-5 text-accent-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+          {toast}
+        </div>
+      )}
+
       <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-xl z-50 border-b border-gray-200 shadow-sm">
         <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-4">
