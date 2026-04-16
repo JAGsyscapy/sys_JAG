@@ -64,8 +64,6 @@ export default function Home() {
     );
   }
 
-  const whatsappLink = `https://wa.me/52${data.hero.phone}?text=CITA`;
-
   return (
     <div className="min-h-screen bg-bg-main text-text-main font-sans selection:bg-accent-yellow selection:text-text-main relative">
       
@@ -82,9 +80,9 @@ export default function Home() {
             <img src={logoPsic} alt="Logo" className="h-14 w-auto object-contain" />
           </div>
           <div className="flex items-center gap-6">
-            <a href={whatsappLink} target="_blank" rel="noreferrer" className="bg-whatsapp text-white px-6 py-3 rounded-xl font-black text-sm shadow-md hover:scale-105 transition-all">
+            <Link to="/gracias" className="bg-whatsapp text-white px-6 py-3 rounded-xl font-black text-sm shadow-md hover:scale-105 transition-all">
               Agendar Cita
-            </a>
+            </Link>
           </div>
         </div>
       </nav>
@@ -98,19 +96,17 @@ export default function Home() {
           <h1 className="text-5xl md:text-7xl font-black text-text-main leading-[1.1] tracking-tight">
             Encuentra el equilibrio <br /> <span className="text-accent-green italic">que necesitas.</span>
           </h1>
-          <p className="text-xl text-text-main max-w-2xl mx-auto leading-relaxed font-semibold">
-            {data.hero.therapy}. Especialista en Terapia Cognitivo Conductual para adolescentes y adultos.
-          </p>
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="#servicios" className="inline-block bg-white border border-gray-200 text-text-main font-black uppercase text-sm tracking-widest px-8 py-4 rounded-full shadow-sm hover:border-accent-orange hover:text-accent-orange transition-colors">
+            <Link to="/gracias" className="inline-block bg-whatsapp text-white font-black uppercase text-sm tracking-widest px-8 py-4 rounded-full shadow-lg hover:scale-105 transition-transform w-full sm:w-auto text-center">
+              Agendar Cita Ahora
+            </Link>
+            <a href="#servicios" className="inline-block bg-white border border-gray-200 text-text-main font-black uppercase text-sm tracking-widest px-8 py-4 rounded-full shadow-sm hover:border-accent-orange hover:text-accent-orange transition-colors w-full sm:w-auto text-center">
               Explorar Servicios ↓
             </a>
-            {data.gallery && data.gallery.length > 0 && (
-              <a href="#galeria" className="inline-block bg-transparent text-text-main font-black uppercase text-sm tracking-widest px-8 py-4 hover:text-accent-green transition-colors">
-                Ver Galería
-              </a>
-            )}
           </div>
+          <p className="text-xl text-text-main max-w-2xl mx-auto leading-relaxed font-semibold pt-6">
+            {data.hero.therapy}. Especialista en Terapia Cognitivo Conductual para adolescentes y adultos.
+          </p>
         </div>
       </section>
 
@@ -283,10 +279,14 @@ export default function Home() {
           </div>
         </div>
         <div className="max-w-6xl mx-auto px-6 mt-32 pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between gap-6 items-center">
-          <p className="text-xs font-black uppercase tracking-widest opacity-50">© 2026 {data.hero.name}</p>
-          <Link to="/admin" className="text-xs font-black uppercase tracking-widest text-accent-yellow hover:text-white transition-colors">
-            Acceso Sistema
-          </Link>
+          <p className="text-xs font-black uppercase tracking-widest opacity-50">© 2026 {data.hero.name} | Cédula Profesional: 12345678</p>
+          <div className="flex flex-wrap justify-center md:justify-end gap-4 mt-4 md:mt-0">
+            <Link to="/privacidad" className="text-xs font-bold text-gray-300 hover:text-white transition-colors">Privacidad</Link>
+            <Link to="/terminos" className="text-xs font-bold text-gray-300 hover:text-white transition-colors">Términos</Link>
+            <Link to="/admin" className="text-xs font-black uppercase tracking-widest text-accent-yellow hover:text-white transition-colors ml-4">
+              Acceso Sistema
+            </Link>
+          </div>
         </div>
       </footer>
 
@@ -345,17 +345,15 @@ export default function Home() {
         </div>
       </div>
 
-      <a
-        href={whatsappLink}
-        target="_blank"
-        rel="noreferrer"
+      <Link
+        to="/gracias"
         className="fixed bottom-6 right-6 z-[100] bg-whatsapp text-white p-4 rounded-full shadow-2xl hover:bg-green-500 transition-colors animate-bounce"
         aria-label="Contactar por WhatsApp"
       >
         <svg className="w-8 h-8 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332-.006c.106-.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 3.825 0 6.938 3.112 6.938 6.937 0 3.825-3.113 6.938-6.938 6.938z"/>
         </svg>
-      </a>
+      </Link>
 
       {selectedImage && (
         <div 
