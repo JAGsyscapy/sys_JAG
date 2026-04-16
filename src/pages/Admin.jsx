@@ -32,10 +32,15 @@ const AdminCard = ({ title, subtitle, onClick }) => (
   </button>
 );
 
-const Input = ({ label, value, onChange }) => (
+const Input = ({ label, value, onChange, placeholder }) => (
   <div className="space-y-2">
     <span className="text-xs font-black uppercase text-text-main ml-2">{label}</span>
-    <input className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-text-main" value={value} onChange={e => onChange(e.target.value)} />
+    <input 
+      className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-text-main" 
+      value={value} 
+      onChange={e => onChange(e.target.value)}
+      placeholder={placeholder}
+    />
   </div>
 );
 
@@ -148,6 +153,17 @@ export default function Admin() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleMapUrlExtraction = (inputValue) => {
+    let finalUrl = inputValue;
+    if (inputValue.includes('<iframe')) {
+      const match = inputValue.match(/src="([^"]+)"/);
+      if (match && match[1]) {
+        finalUrl = match[1];
+      }
+    }
+    setData({...data, contact: {...data.contact, mapUrl: finalUrl}});
   };
 
   const handleAddGalleryItem = () => {
@@ -325,9 +341,14 @@ export default function Admin() {
               <Input label="Instagram (URL o usuario sin @)" value={data.contact.instagram} onChange={v => setData({...data, contact: {...data.contact, instagram: v}})} />
               <Input label="Facebook (URL completa)" value={data.contact.facebook} onChange={v => setData({...data, contact: {...data.contact, facebook: v}})} />
               <div className="space-y-2">
-                <span className="text-xs font-black uppercase text-text-main ml-2">URL del Mapa (Iframe de Google Maps)</span>
-                <p className="text-xs text-gray-500 ml-2 mb-2">Pega aquí el enlace que está dentro de src="..." al compartir el mapa en Google Maps.</p>
-                <input className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-text-main" value={data.contact.mapUrl} onChange={e => setData({...data, contact: {...data.contact, mapUrl: e.target.value}})} />
+                <span className="text-xs font-black uppercase text-text-main ml-2">Mapa (Pega el código iframe de Google Maps aquí)</span>
+                <p className="text-xs text-gray-500 ml-2 mb-2">Simplemente pega el código que te da Google Maps al "Compartir > Incorporar un mapa". El sistema se encargará del resto.</p>
+                <textarea 
+                  className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-text-main min-h-[100px]" 
+                  value={data.contact.mapUrl} 
+                  onChange={e => handleMapUrlExtraction(e.target.value)}
+                  placeholder='<iframe src="..." ...></iframe>'
+                />
               </div>
             </div>
           </Modal>
