@@ -55,6 +55,7 @@ export default function Admin() {
   const [deletedImages, setDeletedImages] = useState([]);
   const [newGalImg, setNewGalImg] = useState(null);
   const [newGalTitle, setNewGalTitle] = useState('');
+  const [toast, setToast] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -75,6 +76,11 @@ export default function Admin() {
         });
     }
   }, [token]);
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -147,9 +153,12 @@ export default function Admin() {
         setActiveModal(null);
         setImageFile(null);
         setDeletedImages([]);
+        showToast('Cambios guardados exitosamente', 'success');
+      } else {
+        showToast('Error al guardar los cambios', 'error');
       }
     } catch (error) {
-      alert('Hubo un error al guardar los cambios.');
+      showToast('Hubo un error de conexión', 'error');
     } finally {
       setSaving(false);
     }
@@ -167,7 +176,7 @@ export default function Admin() {
   };
 
   const handleAddGalleryItem = () => {
-    if (!newGalImg) return alert('Selecciona una imagen');
+    if (!newGalImg) return;
     setUploading(true);
     const preview = URL.createObjectURL(newGalImg);
     setData({
@@ -177,6 +186,7 @@ export default function Admin() {
     setNewGalImg(null);
     setNewGalTitle('');
     setUploading(false);
+    showToast('Imagen agregada a la cola', 'success');
   };
 
   const handleRemoveGalleryItem = (index) => {
@@ -186,6 +196,7 @@ export default function Admin() {
     }
     const newGallery = data.gallery.filter((_, i) => i !== index);
     setData({ ...data, gallery: newGallery });
+    showToast('Imagen eliminada', 'info');
   };
 
   const handleCloseModal = () => {
@@ -222,6 +233,16 @@ export default function Admin() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 md:p-12 font-sans pb-40">
+      
+      {toast && (
+        <div className={`fixed top-10 left-1/2 -translate-x-1/2 z-[300] px-6 py-4 rounded-full shadow-2xl font-black text-sm uppercase tracking-widest flex items-center gap-3 animate-in slide-in-from-top-10 fade-in duration-300 ${toast.type === 'error' ? 'bg-red-500 text-white' : 'bg-text-main text-white'}`}>
+          {toast.type === 'success' && <svg className="w-5 h-5 text-accent-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>}
+          {toast.type === 'info' && <svg className="w-5 h-5 text-accent-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+          {toast.type === 'error' && <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+          {toast.message}
+        </div>
+      )}
+
       <div className="max-w-6xl mx-auto space-y-12">
         <header className="flex flex-col md:flex-row justify-between items-center gap-6 bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-gray-200">
           <div className="flex items-center gap-6">
@@ -305,6 +326,7 @@ export default function Admin() {
                     onClick={() => {
                       const newServices = data.services.filter((_, index) => index !== i);
                       setData({...data, services: newServices});
+                      showToast('Servicio eliminado', 'info');
                     }}
                     className="bg-red-50 border border-red-200 text-red-600 w-14 h-14 flex items-center justify-center rounded-xl font-black text-xl hover:bg-red-100 transition-colors shrink-0"
                   >
