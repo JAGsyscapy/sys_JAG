@@ -5,6 +5,7 @@ import logoPsic from '../assets/logopsichort.jpeg';
 export default function Home() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     fetch('/api/data')
@@ -130,7 +131,11 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {data.gallery.map((img, i) => (
-              <div key={i} className="group relative rounded-[2rem] overflow-hidden bg-white shadow-md border border-gray-200 flex items-center justify-center p-4">
+              <div 
+                key={i} 
+                className="group relative rounded-[2rem] overflow-hidden bg-white shadow-md border border-gray-200 flex items-center justify-center p-4 cursor-zoom-in"
+                onClick={() => setSelectedImage(img.url)}
+              >
                 <div className="aspect-[4/3] w-full flex items-center justify-center">
                   <img src={img.url} alt={img.title} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 rounded-xl" />
                 </div>
@@ -149,7 +154,7 @@ export default function Home() {
             <h3 className="text-4xl font-black text-text-main">Ubicación</h3>
             <p className="text-text-main font-semibold text-lg">Visítanos en nuestro consultorio.</p>
           </div>
-          <div className="w-full h-[400px] rounded-[2rem] overflow-hidden shadow-xl border border-gray-200">
+          <div className="w-full h-[450px] rounded-[2rem] overflow-hidden shadow-xl border border-gray-200 bg-gray-100">
             <iframe 
               src={data.contact.mapUrl} 
               width="100%" 
@@ -234,6 +239,48 @@ export default function Home() {
         </div>
       </footer>
 
+      <div className="fixed bottom-28 right-6 z-[90] flex flex-col gap-3 items-end pointer-events-none hidden md:flex">
+        {data.contact.address && (
+          <div className="bg-white px-4 py-2 rounded-2xl shadow-lg flex items-center gap-3 animate-bounce pointer-events-auto border border-gray-100">
+            <div className="text-accent-orange">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            </div>
+            <p className="text-xs font-bold text-text-main max-w-[150px] truncate">{data.contact.address}</p>
+          </div>
+        )}
+        
+        {data.contact.displayPhone && (
+          <div className="bg-white px-4 py-2 rounded-2xl shadow-lg flex items-center gap-3 animate-bounce pointer-events-auto border border-gray-100" style={{ animationDelay: '100ms' }}>
+            <div className="text-accent-green">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            </div>
+            <p className="text-xs font-bold text-text-main">{data.contact.displayPhone}</p>
+          </div>
+        )}
+        
+        {data.contact.email && (
+          <div className="bg-white px-4 py-2 rounded-2xl shadow-lg flex items-center gap-3 animate-bounce pointer-events-auto border border-gray-100" style={{ animationDelay: '200ms' }}>
+            <div className="text-blue-400">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            </div>
+            <p className="text-xs font-bold text-text-main">{data.contact.email}</p>
+          </div>
+        )}
+
+        <div className="flex gap-2 pointer-events-auto" style={{ animationDelay: '300ms' }}>
+          {data.contact.facebook && (
+            <a href={data.contact.facebook} target="_blank" rel="noreferrer" className="bg-[#1877F2] p-2 rounded-full animate-bounce shadow-lg hover:scale-110 transition-transform">
+              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V7.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+          )}
+          {data.contact.instagram && (
+            <a href={data.contact.instagram.startsWith('http') ? data.contact.instagram : `https://${data.contact.instagram}`} target="_blank" rel="noreferrer" className="bg-pink-600 p-2 rounded-full animate-bounce shadow-lg hover:scale-110 transition-transform" style={{ animationDelay: '400ms' }}>
+              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+            </a>
+          )}
+        </div>
+      </div>
+
       <a
         href={whatsappLink}
         target="_blank"
@@ -245,6 +292,19 @@ export default function Home() {
           <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332-.006c.106-.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 3.825 0 6.938 3.112 6.938 6.937 0 3.825-3.113 6.938-6.938 6.938z"/>
         </svg>
       </a>
+
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 z-[200] bg-black/90 flex items-center justify-center p-4 cursor-zoom-out backdrop-blur-sm"
+          onClick={() => setSelectedImage(null)}
+        >
+          <img 
+            src={selectedImage} 
+            alt="Vista ampliada" 
+            className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl animate-in zoom-in duration-200" 
+          />
+        </div>
+      )}
     </div>
   );
 }
