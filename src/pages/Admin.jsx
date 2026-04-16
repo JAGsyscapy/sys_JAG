@@ -2,6 +2,43 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logoPsic from '../assets/logopsichort.jpeg';
 
+const Modal = ({ title, onClose, onSave, saving, children }) => (
+  <div className="fixed inset-0 bg-text-main/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+    <div className="bg-white w-full max-w-4xl rounded-[2rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+      <div className="p-6 md:p-8 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+        <h3 className="text-2xl font-black text-text-main">{title}</h3>
+        <button onClick={onClose} className="text-gray-500 hover:text-red-600 font-black text-sm uppercase tracking-widest px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200">Cerrar</button>
+      </div>
+      <div className="p-6 md:p-10 space-y-6 max-h-[65vh] overflow-y-auto">
+        {children}
+      </div>
+      <div className="p-6 md:p-8 bg-gray-50 border-t border-gray-200 flex justify-end gap-4">
+        <button onClick={onClose} className="px-6 py-3 font-black text-gray-500 hover:text-text-main">Cancelar</button>
+        <button onClick={onSave} disabled={saving} className="bg-accent-green text-white px-8 py-3 rounded-xl font-black text-sm uppercase tracking-widest shadow-md hover:bg-green-600 disabled:opacity-50">
+          {saving ? 'Procesando...' : 'Aplicar Cambios'}
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+const AdminCard = ({ title, subtitle, onClick }) => (
+  <button onClick={onClick} className="bg-white p-8 rounded-[2rem] border border-gray-200 shadow-sm hover:shadow-xl hover:border-accent-green hover:-translate-y-1 transition-all text-left group w-full">
+    <div className="w-12 h-12 bg-gray-50 border border-gray-100 rounded-xl mb-4 group-hover:bg-accent-green group-hover:border-accent-green transition-colors flex items-center justify-center text-gray-400 group-hover:text-white">
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+    </div>
+    <h4 className="text-xl font-black tracking-tight text-text-main">{title}</h4>
+    <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">{subtitle}</p>
+  </button>
+);
+
+const Input = ({ label, value, onChange }) => (
+  <div className="space-y-2">
+    <span className="text-xs font-black uppercase text-text-main ml-2">{label}</span>
+    <input className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-text-main" value={value} onChange={e => onChange(e.target.value)} />
+  </div>
+);
+
 export default function Admin() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [credentials, setCredentials] = useState({ username: '', password: '' });
@@ -131,6 +168,13 @@ export default function Admin() {
     setData({ ...data, gallery: newGallery });
   };
 
+  const handleCloseModal = () => {
+    setActiveModal(null);
+    setImageFile(null);
+    setNewGalImg(null);
+    setNewGalTitle('');
+  };
+
   if (!token) {
     return (
       <div className="min-h-screen bg-bg-main flex items-center justify-center p-6 font-sans">
@@ -155,26 +199,6 @@ export default function Admin() {
   }
 
   if (!data) return null;
-
-  const Modal = ({ title, children }) => (
-    <div className="fixed inset-0 bg-text-main/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-4xl rounded-[2rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-        <div className="p-6 md:p-8 border-b border-gray-200 flex justify-between items-center bg-gray-50">
-          <h3 className="text-2xl font-black text-text-main">{title}</h3>
-          <button onClick={() => {setActiveModal(null); setImageFile(null);}} className="text-gray-500 hover:text-red-600 font-black text-sm uppercase tracking-widest px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200">Cerrar</button>
-        </div>
-        <div className="p-6 md:p-10 space-y-6 max-h-[65vh] overflow-y-auto">
-          {children}
-        </div>
-        <div className="p-6 md:p-8 bg-gray-50 border-t border-gray-200 flex justify-end gap-4">
-          <button onClick={() => {setActiveModal(null); setImageFile(null);}} className="px-6 py-3 font-black text-gray-500 hover:text-text-main">Cancelar</button>
-          <button onClick={saveChanges} disabled={saving} className="bg-accent-green text-white px-8 py-3 rounded-xl font-black text-sm uppercase tracking-widest shadow-md hover:bg-green-600 disabled:opacity-50">
-            {saving ? 'Procesando...' : 'Aplicar Cambios'}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 md:p-12 font-sans pb-40">
@@ -203,7 +227,7 @@ export default function Admin() {
         </div>
 
         {activeModal === 'hero' && (
-          <Modal title="Editar Inicio">
+          <Modal title="Editar Inicio" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
             <div className="space-y-6">
               <Input label="Nombre Profesional" value={data.hero.name} onChange={v => setData({...data, hero: {...data.hero, name: v}})} />
               <Input label="Título de Subtítulo" value={data.hero.subtitle} onChange={v => setData({...data, hero: {...data.hero, subtitle: v}})} />
@@ -232,7 +256,7 @@ export default function Admin() {
         )}
 
         {activeModal === 'about' && (
-          <Modal title="Editar Especialista">
+          <Modal title="Editar Especialista" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
             <div className="space-y-4">
               <Input label="Formación" value={data.about.education} onChange={v => setData({...data, about: {...data.about, education: v}})} />
               <Input label="Enfoque Clínico" value={data.about.approach} onChange={v => setData({...data, about: {...data.about, approach: v}})} />
@@ -243,7 +267,7 @@ export default function Admin() {
         )}
 
         {activeModal === 'services' && (
-          <Modal title="Editar Especialidades">
+          <Modal title="Editar Especialidades" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
             <div className="space-y-4">
               <p className="text-xs font-black uppercase text-gray-500 mb-4">Administra cada servicio de forma individual</p>
               {data.services.map((s, i) => (
@@ -279,7 +303,7 @@ export default function Admin() {
         )}
 
         {activeModal === 'pricing' && (
-          <Modal title="Editar Tarifas">
+          <Modal title="Editar Tarifas" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
             <div className="grid grid-cols-2 gap-6">
               <Input label="Precio Regular" value={data.pricing.regular} onChange={v => setData({...data, pricing: {...data.pricing, regular: v}})} />
               <Input label="Precio Promoción" value={data.pricing.promo} onChange={v => setData({...data, pricing: {...data.pricing, promo: v}})} />
@@ -288,7 +312,7 @@ export default function Admin() {
         )}
 
         {activeModal === 'contact' && (
-          <Modal title="Editar Contacto">
+          <Modal title="Editar Contacto" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
             <div className="space-y-4">
               <Input label="WhatsApp (Solo números)" value={data.hero.phone} onChange={v => setData({...data, hero: {...data.hero, phone: v}})} />
               <Input label="Teléfono Visible" value={data.contact.displayPhone} onChange={v => setData({...data, contact: {...data.contact, displayPhone: v}})} />
@@ -298,7 +322,7 @@ export default function Admin() {
         )}
 
         {activeModal === 'hours' && (
-          <Modal title="Editar Horarios">
+          <Modal title="Editar Horarios" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input label="Lunes" value={data.contact.monday} onChange={v => setData({...data, contact: {...data.contact, monday: v}})} />
               <Input label="Martes" value={data.contact.tuesday} onChange={v => setData({...data, contact: {...data.contact, tuesday: v}})} />
@@ -314,7 +338,7 @@ export default function Admin() {
         )}
 
         {activeModal === 'gallery' && (
-          <Modal title="Gestor de Galería">
+          <Modal title="Gestor de Galería" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
             <div className="space-y-8">
               <div className="bg-gray-50 border border-gray-200 p-6 rounded-[2rem] space-y-4">
                 <h4 className="font-black uppercase tracking-widest text-xs text-text-main">Añadir nueva imagen</h4>
@@ -371,20 +395,3 @@ export default function Admin() {
     </div>
   );
 }
-
-const AdminCard = ({ title, subtitle, onClick }) => (
-  <button onClick={onClick} className="bg-white p-8 rounded-[2rem] border border-gray-200 shadow-sm hover:shadow-xl hover:border-accent-green hover:-translate-y-1 transition-all text-left group w-full">
-    <div className="w-12 h-12 bg-gray-50 border border-gray-100 rounded-xl mb-4 group-hover:bg-accent-green group-hover:border-accent-green transition-colors flex items-center justify-center text-gray-400 group-hover:text-white">
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-    </div>
-    <h4 className="text-xl font-black tracking-tight text-text-main">{title}</h4>
-    <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">{subtitle}</p>
-  </button>
-);
-
-const Input = ({ label, value, onChange }) => (
-  <div className="space-y-2">
-    <span className="text-xs font-black uppercase text-text-main ml-2">{label}</span>
-    <input className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-text-main" value={value} onChange={e => onChange(e.target.value)} />
-  </div>
-);
