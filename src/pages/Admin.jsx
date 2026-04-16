@@ -58,6 +58,9 @@ export default function Admin() {
         .then(res => res.json())
         .then(resData => {
           if (!resData.gallery) resData.gallery = [];
+          if (!resData.contact.email) resData.contact.email = '';
+          if (!resData.contact.instagram) resData.contact.instagram = '';
+          if (!resData.contact.facebook) resData.contact.facebook = '';
           setData(resData);
         })
         .catch(() => {
@@ -221,7 +224,7 @@ export default function Admin() {
           <AdminCard title="Sobre Mí" subtitle="Formación y Enfoque" onClick={() => setActiveModal('about')} />
           <AdminCard title="Servicios" subtitle="Lista Individual" onClick={() => setActiveModal('services')} />
           <AdminCard title="Tarifas" subtitle="Precios y Promociones" onClick={() => setActiveModal('pricing')} />
-          <AdminCard title="Contacto" subtitle="Teléfono y Dirección" onClick={() => setActiveModal('contact')} />
+          <AdminCard title="Contacto" subtitle="Teléfono, Redes y Dirección" onClick={() => setActiveModal('contact')} />
           <AdminCard title="Horarios" subtitle="Disponibilidad Diaria" onClick={() => setActiveModal('hours')} />
           <AdminCard title="Galería de Fotos" subtitle="Añadir o Quitar Imágenes" onClick={() => setActiveModal('gallery')} />
         </div>
@@ -317,6 +320,9 @@ export default function Admin() {
               <Input label="WhatsApp (Solo números)" value={data.hero.phone} onChange={v => setData({...data, hero: {...data.hero, phone: v}})} />
               <Input label="Teléfono Visible" value={data.contact.displayPhone} onChange={v => setData({...data, contact: {...data.contact, displayPhone: v}})} />
               <Input label="Dirección Completa" value={data.contact.address} onChange={v => setData({...data, contact: {...data.contact, address: v}})} />
+              <Input label="Correo Electrónico" value={data.contact.email} onChange={v => setData({...data, contact: {...data.contact, email: v}})} />
+              <Input label="Instagram (URL o usuario sin @)" value={data.contact.instagram} onChange={v => setData({...data, contact: {...data.contact, instagram: v}})} />
+              <Input label="Facebook (URL completa)" value={data.contact.facebook} onChange={v => setData({...data, contact: {...data.contact, facebook: v}})} />
             </div>
           </Modal>
         )}
