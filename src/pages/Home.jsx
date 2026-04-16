@@ -143,6 +143,26 @@ export default function Home() {
         </section>
       )}
 
+      {data.contact.mapUrl && (
+        <section className="max-w-6xl mx-auto px-6 py-10 mt-10 border-t border-gray-200">
+          <div className="text-center space-y-3 mb-10">
+            <h3 className="text-4xl font-black text-text-main">Ubicación</h3>
+            <p className="text-text-main font-semibold text-lg">Visítanos en nuestro consultorio.</p>
+          </div>
+          <div className="w-full h-[400px] rounded-[2rem] overflow-hidden shadow-xl border border-gray-200">
+            <iframe 
+              src={data.contact.mapUrl} 
+              width="100%" 
+              height="100%" 
+              style={{border: 0}} 
+              allowFullScreen="" 
+              loading="lazy" 
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+        </section>
+      )}
+
       <footer id="contacto" className="bg-text-main text-bg-main pt-32 pb-12 mt-20 rounded-t-[4rem]">
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-20">
           <div className="space-y-8">
@@ -154,39 +174,39 @@ export default function Home() {
           
           <div className="space-y-8">
             <h4 className="text-sm font-black uppercase tracking-widest text-accent-orange">Contacto</h4>
-            <div className="space-y-5 font-bold text-base">
-              <div className="flex items-center gap-4 group cursor-default">
-                <div className="bg-white/10 p-3 rounded-full group-hover:bg-accent-orange group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-300">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <div className="space-y-6 font-bold text-base">
+              <div className="flex items-center gap-4">
+                <div className="bg-white/10 p-3 rounded-full animate-bounce shadow-lg text-accent-orange">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                 </div>
                 <p className="opacity-90 leading-snug">{data.contact.address}</p>
               </div>
 
-              <div className="flex items-center gap-4 group cursor-default">
-                <div className="bg-white/10 p-3 rounded-full group-hover:bg-accent-green group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-300">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+              <div className="flex items-center gap-4">
+                <div className="bg-white/10 p-3 rounded-full animate-bounce shadow-lg text-accent-green" style={{ animationDelay: '100ms' }}>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                 </div>
                 <p>{data.contact.displayPhone}</p>
               </div>
 
               {data.contact.email && (
-                <div className="flex items-center gap-4 group cursor-default">
-                  <div className="bg-white/10 p-3 rounded-full group-hover:bg-blue-500 group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-300">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                <div className="flex items-center gap-4">
+                  <div className="bg-white/10 p-3 rounded-full animate-bounce shadow-lg text-blue-400" style={{ animationDelay: '200ms' }}>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
                   </div>
                   <p>{data.contact.email}</p>
                 </div>
               )}
             </div>
 
-            <div className="flex gap-4 pt-4">
+            <div className="flex gap-6 pt-4">
               {data.contact.facebook && (
-                <a href={data.contact.facebook} target="_blank" rel="noreferrer" className="bg-white/10 p-3 rounded-full hover:bg-[#1877F2] hover:scale-125 hover:-translate-y-2 transition-all duration-300 shadow-lg">
+                <a href={data.contact.facebook} target="_blank" rel="noreferrer" className="bg-[#1877F2] p-3 rounded-full animate-bounce shadow-lg hover:bg-blue-600 transition-colors" style={{ animationDelay: '300ms' }}>
                   <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V7.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                 </a>
               )}
               {data.contact.instagram && (
-                <a href={data.contact.instagram.startsWith('http') ? data.contact.instagram : `https://${data.contact.instagram}`} target="_blank" rel="noreferrer" className="bg-white/10 p-3 rounded-full hover:bg-pink-600 hover:scale-125 hover:-translate-y-2 transition-all duration-300 shadow-lg">
+                <a href={data.contact.instagram.startsWith('http') ? data.contact.instagram : `https://${data.contact.instagram}`} target="_blank" rel="noreferrer" className="bg-pink-600 p-3 rounded-full animate-bounce shadow-lg hover:bg-pink-700 transition-colors" style={{ animationDelay: '400ms' }}>
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
                 </a>
               )}

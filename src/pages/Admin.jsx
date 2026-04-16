@@ -61,6 +61,7 @@ export default function Admin() {
           if (!resData.contact.email) resData.contact.email = '';
           if (!resData.contact.instagram) resData.contact.instagram = '';
           if (!resData.contact.facebook) resData.contact.facebook = '';
+          if (!resData.contact.mapUrl) resData.contact.mapUrl = '';
           setData(resData);
         })
         .catch(() => {
@@ -224,7 +225,7 @@ export default function Admin() {
           <AdminCard title="Sobre Mí" subtitle="Formación y Enfoque" onClick={() => setActiveModal('about')} />
           <AdminCard title="Servicios" subtitle="Lista Individual" onClick={() => setActiveModal('services')} />
           <AdminCard title="Tarifas" subtitle="Precios y Promociones" onClick={() => setActiveModal('pricing')} />
-          <AdminCard title="Contacto" subtitle="Teléfono, Redes y Dirección" onClick={() => setActiveModal('contact')} />
+          <AdminCard title="Contacto y Mapa" subtitle="Teléfono, Redes y Ubicación" onClick={() => setActiveModal('contact')} />
           <AdminCard title="Horarios" subtitle="Disponibilidad Diaria" onClick={() => setActiveModal('hours')} />
           <AdminCard title="Galería de Fotos" subtitle="Añadir o Quitar Imágenes" onClick={() => setActiveModal('gallery')} />
         </div>
@@ -315,14 +316,19 @@ export default function Admin() {
         )}
 
         {activeModal === 'contact' && (
-          <Modal title="Editar Contacto" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
+          <Modal title="Editar Contacto y Mapa" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
             <div className="space-y-4">
               <Input label="WhatsApp (Solo números)" value={data.hero.phone} onChange={v => setData({...data, hero: {...data.hero, phone: v}})} />
               <Input label="Teléfono Visible" value={data.contact.displayPhone} onChange={v => setData({...data, contact: {...data.contact, displayPhone: v}})} />
               <Input label="Dirección Completa" value={data.contact.address} onChange={v => setData({...data, contact: {...data.contact, address: v}})} />
               <Input label="Correo Electrónico" value={data.contact.email} onChange={v => setData({...data, contact: {...data.contact, email: v}})} />
-              <Input label="Instagram (URL completa)" value={data.contact.instagram} onChange={v => setData({...data, contact: {...data.contact, instagram: v}})} />
+              <Input label="Instagram (URL o usuario sin @)" value={data.contact.instagram} onChange={v => setData({...data, contact: {...data.contact, instagram: v}})} />
               <Input label="Facebook (URL completa)" value={data.contact.facebook} onChange={v => setData({...data, contact: {...data.contact, facebook: v}})} />
+              <div className="space-y-2">
+                <span className="text-xs font-black uppercase text-text-main ml-2">URL del Mapa (Iframe de Google Maps)</span>
+                <p className="text-xs text-gray-500 ml-2 mb-2">Pega aquí el enlace que está dentro de src="..." al compartir el mapa en Google Maps.</p>
+                <input className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-text-main" value={data.contact.mapUrl} onChange={e => setData({...data, contact: {...data.contact, mapUrl: e.target.value}})} />
+              </div>
             </div>
           </Modal>
         )}

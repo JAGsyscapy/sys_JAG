@@ -75,6 +75,7 @@ export const handler = async (event, context) => {
           email: contact.email || '',
           instagram: contact.instagram || '',
           facebook: contact.facebook || '',
+          mapUrl: contact.map_url || '',
           monday: contact.monday,
           tuesday: contact.tuesday,
           wednesday: contact.wednesday,
@@ -136,13 +137,13 @@ export const handler = async (event, context) => {
 
         await client.query(`
           UPDATE contact SET
-          display_phone = $1, address = $2, monday = $3, tuesday = $4, wednesday = $5, thursday = $6, friday = $7, saturday = $8, sunday = $9, email = $10, instagram = $11, facebook = $12
+          display_phone = $1, address = $2, monday = $3, tuesday = $4, wednesday = $5, thursday = $6, friday = $7, saturday = $8, sunday = $9, email = $10, instagram = $11, facebook = $12, map_url = $13
           WHERE professional_id = 1
         `, [
           newData.contact.displayPhone, newData.contact.address,
           newData.contact.monday, newData.contact.tuesday, newData.contact.wednesday,
           newData.contact.thursday, newData.contact.friday, newData.contact.saturday, newData.contact.sunday,
-          newData.contact.email, newData.contact.instagram, newData.contact.facebook
+          newData.contact.email, newData.contact.instagram, newData.contact.facebook, newData.contact.mapUrl
         ]);
 
         await client.query('COMMIT');
