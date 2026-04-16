@@ -32,8 +32,8 @@ const deleteCloudinaryImage = async (url) => {
   } catch (e) {}
 };
 
-export const handler = async (event, context) => {
-  if (event.httpMethod === 'GET') {
+export default async function handler(req, res) {
+  if (req.method === 'GET') {
     try {
       const profRes = await pool.query('SELECT * FROM professional WHERE id = 1');
       const prof = profRes.rows[0];
@@ -87,21 +87,21 @@ export const handler = async (event, context) => {
         gallery: gallery
       };
 
-      return { statusCode: 200, body: JSON.stringify(responseData) };
+      return res.status(200).json(responseData);
     } catch (error) {
-      return { statusCode: 500, body: JSON.stringify({ error: 'Database error' }) };
+      return res.status(500).json({ error: 'Database error' });
     }
   }
 
-  if (event.httpMethod === 'PUT') {
+  if (req.method === 'PUT') {
     try {
-      const authHeader = event.headers.authorization || event.headers.Authorization;
-      if (!authHeader) return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
+      const authHeader = req.headers.authorization || req.headers.Authorization;
+      if (!authHeader) return res.status(401).json({ error: 'Unauthorized' });
 
       const token = authHeader.split(' ')[1];
       jwt.verify(token, process.env.JWT_SECRET);
 
-      const newData = JSON.parse(event.body);
+      const newData = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
       const client = await pool.connect();
 
       try {
@@ -161,11 +161,11 @@ export const handler = async (event, context) => {
         client.release();
       }
 
-      return { statusCode: 200, body: JSON.stringify({ success: true }) };
+      return res.status(200).json({ success: true });
     } catch (error) {
-      return { statusCode: 401, body: JSON.stringify({ error: 'Invalid token or update failed' }) };
+      return res.status(401).json({ error: 'Invalid token or update failed' });
     }
   }
 
-  return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
-};
+  return res.status(405).json({ error: 'Method not allowed' });
+}
