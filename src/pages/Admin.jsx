@@ -321,7 +321,7 @@ export default function Admin() {
               <Input label="Teléfono Visible" value={data.contact.displayPhone} onChange={v => setData({...data, contact: {...data.contact, displayPhone: v}})} />
               <Input label="Dirección Completa" value={data.contact.address} onChange={v => setData({...data, contact: {...data.contact, address: v}})} />
               <Input label="Correo Electrónico" value={data.contact.email} onChange={v => setData({...data, contact: {...data.contact, email: v}})} />
-              <Input label="Instagram (URL o usuario sin @)" value={data.contact.instagram} onChange={v => setData({...data, contact: {...data.contact, instagram: v}})} />
+              <Input label="Instagram (URL completa)" value={data.contact.instagram} onChange={v => setData({...data, contact: {...data.contact, instagram: v}})} />
               <Input label="Facebook (URL completa)" value={data.contact.facebook} onChange={v => setData({...data, contact: {...data.contact, facebook: v}})} />
             </div>
           </Modal>
