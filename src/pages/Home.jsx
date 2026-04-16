@@ -43,6 +43,18 @@ export default function Home() {
     navigator.clipboard.writeText(text);
   };
 
+  const handleEmailClick = (e, email) => {
+    e.preventDefault();
+    handleCopy(email);
+    window.location.href = `mailto:${email}`;
+  };
+
+  const handlePhoneClick = (e, phone) => {
+    e.preventDefault();
+    handleCopy(phone);
+    window.location.href = `tel:${phone.replace(/\D/g, '')}`;
+  };
+
   return (
     <div className="min-h-screen bg-bg-main text-text-main font-sans selection:bg-accent-yellow selection:text-text-main relative">
       <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-xl z-50 border-b border-gray-200 shadow-sm">
@@ -153,7 +165,7 @@ export default function Home() {
       )}
 
       {data.contact.mapUrl && (
-        <section className="max-w-6xl mx-auto px-6 py-10 mt-10 border-t border-gray-200">
+        <section id="ubicacion" className="max-w-6xl mx-auto px-6 py-10 mt-10 border-t border-gray-200 scroll-mt-24">
           <div className="text-center space-y-3 mb-10">
             <h3 className="text-4xl font-black text-text-main">Ubicación</h3>
             <p className="text-text-main font-semibold text-lg">Visítanos en nuestro consultorio.</p>
@@ -187,9 +199,7 @@ export default function Home() {
               
               {data.contact.address && (
                 <a 
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.contact.address)}`} 
-                  target="_blank" 
-                  rel="noreferrer" 
+                  href="#ubicacion" 
                   className="flex items-center gap-4 group cursor-pointer"
                 >
                   <div className="bg-white/10 p-3 rounded-full shadow-lg text-accent-orange group-hover:bg-accent-orange group-hover:text-white transition-colors">
@@ -202,7 +212,7 @@ export default function Home() {
               {data.contact.displayPhone && (
                 <a 
                   href={`tel:${data.contact.displayPhone.replace(/\D/g,'')}`} 
-                  onClick={() => handleCopy(data.contact.displayPhone)} 
+                  onClick={(e) => handlePhoneClick(e, data.contact.displayPhone)} 
                   className="flex items-center gap-4 group cursor-pointer"
                 >
                   <div className="bg-white/10 p-3 rounded-full shadow-lg text-accent-green group-hover:bg-accent-green group-hover:text-white transition-colors">
@@ -215,7 +225,7 @@ export default function Home() {
               {data.contact.email && (
                 <a 
                   href={`mailto:${data.contact.email}`} 
-                  onClick={() => handleCopy(data.contact.email)} 
+                  onClick={(e) => handleEmailClick(e, data.contact.email)} 
                   className="flex items-center gap-4 group cursor-pointer"
                 >
                   <div className="bg-white/10 p-3 rounded-full shadow-lg text-blue-400 group-hover:bg-blue-400 group-hover:text-white transition-colors">
@@ -264,9 +274,7 @@ export default function Home() {
       <div className="fixed bottom-28 right-6 z-[90] flex flex-col gap-3 items-end pointer-events-none hidden md:flex">
         {data.contact.address && (
           <a 
-            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.contact.address)}`} 
-            target="_blank" 
-            rel="noreferrer" 
+            href="#ubicacion" 
             className="bg-white px-4 py-2 rounded-2xl shadow-lg flex items-center gap-3 animate-bounce pointer-events-auto border border-gray-100 hover:bg-gray-50 transition-colors"
           >
             <div className="text-accent-orange">
@@ -279,7 +287,7 @@ export default function Home() {
         {data.contact.displayPhone && (
           <a 
             href={`tel:${data.contact.displayPhone.replace(/\D/g,'')}`} 
-            onClick={() => handleCopy(data.contact.displayPhone)}
+            onClick={(e) => handlePhoneClick(e, data.contact.displayPhone)}
             className="bg-white px-4 py-2 rounded-2xl shadow-lg flex items-center gap-3 animate-bounce pointer-events-auto border border-gray-100 hover:bg-gray-50 transition-colors" 
             style={{ animationDelay: '100ms' }}
           >
@@ -293,7 +301,7 @@ export default function Home() {
         {data.contact.email && (
           <a 
             href={`mailto:${data.contact.email}`} 
-            onClick={() => handleCopy(data.contact.email)}
+            onClick={(e) => handleEmailClick(e, data.contact.email)}
             className="bg-white px-4 py-2 rounded-2xl shadow-lg flex items-center gap-3 animate-bounce pointer-events-auto border border-gray-100 hover:bg-gray-50 transition-colors" 
             style={{ animationDelay: '200ms' }}
           >
