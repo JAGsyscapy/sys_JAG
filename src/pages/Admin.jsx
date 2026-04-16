@@ -8,6 +8,7 @@ export default function Admin() {
   const [data, setData] = useState(null);
   const [activeModal, setActiveModal] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [deletedImages, setDeletedImages] = useState([]);
   const [newGalImg, setNewGalImg] = useState(null);
@@ -110,6 +111,7 @@ export default function Admin() {
 
   const handleAddGalleryItem = () => {
     if (!newGalImg) return alert('Selecciona una imagen');
+    setUploading(true);
     const preview = URL.createObjectURL(newGalImg);
     setData({
       ...data,
@@ -117,6 +119,7 @@ export default function Admin() {
     });
     setNewGalImg(null);
     setNewGalTitle('');
+    setUploading(false);
   };
 
   const handleRemoveGalleryItem = (index) => {
