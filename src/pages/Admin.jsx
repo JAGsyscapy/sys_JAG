@@ -273,6 +273,18 @@ export default function Admin() {
               <Input label="Nombre Profesional" value={data.hero.name} onChange={v => setData({...data, hero: {...data.hero, name: v}})} />
               <Input label="Título de Subtítulo" value={data.hero.subtitle} onChange={v => setData({...data, hero: {...data.hero, subtitle: v}})} />
               <Input label="Propuesta de Terapia" value={data.hero.therapy} onChange={v => setData({...data, hero: {...data.hero, therapy: v}})} />
+            </div>
+          </Modal>
+        )}
+
+        {activeModal === 'about' && (
+          <Modal title="Editar Especialista" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
+            <div className="space-y-4">
+              <Input label="Formación" value={data.about.education} onChange={v => setData({...data, about: {...data.about, education: v}})} />
+              <Input label="Enfoque Clínico" value={data.about.approach} onChange={v => setData({...data, about: {...data.about, approach: v}})} />
+              <Input label="Objetivo" value={data.about.objective} onChange={v => setData({...data, about: {...data.about, objective: v}})} />
+              <Input label="Público Objetivo" value={data.about.target} onChange={v => setData({...data, about: {...data.about, target: v}})} />
+              
               <div className="space-y-2">
                 <span className="text-xs font-black uppercase text-text-main ml-2">Imagen Principal (Opcional)</span>
                 <div className="relative w-full h-64 bg-gray-50 border-2 border-dashed border-gray-300 rounded-[2rem] flex flex-col items-center justify-center overflow-hidden hover:bg-gray-100 transition-colors group">
@@ -292,17 +304,6 @@ export default function Admin() {
                   <input type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" onChange={e => setImageFile(e.target.files[0])} />
                 </div>
               </div>
-            </div>
-          </Modal>
-        )}
-
-        {activeModal === 'about' && (
-          <Modal title="Editar Especialista" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
-            <div className="space-y-4">
-              <Input label="Formación" value={data.about.education} onChange={v => setData({...data, about: {...data.about, education: v}})} />
-              <Input label="Enfoque Clínico" value={data.about.approach} onChange={v => setData({...data, about: {...data.about, approach: v}})} />
-              <Input label="Objetivo" value={data.about.objective} onChange={v => setData({...data, about: {...data.about, objective: v}})} />
-              <Input label="Público Objetivo" value={data.about.target} onChange={v => setData({...data, about: {...data.about, target: v}})} />
             </div>
           </Modal>
         )}
