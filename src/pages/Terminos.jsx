@@ -11,7 +11,7 @@ export default function Terminos() {
         </div>
         <h1 className="text-3xl md:text-4xl font-black tracking-tight">Términos y Condiciones</h1>
         <div className="space-y-6 text-gray-700 leading-relaxed font-medium">
-          <p>El acceso y uso de este sitio web y los servicios ofrecidos por el Psic. Jorge A. Gutiérrez están sujetos a los siguientes términos y condiciones.</p>
+          <p>El acceso y uso de este sitio web y los servicios ofrecidos por el Centro de Atención Psicológica y Pedagógica de Querétaro están sujetos a los siguientes términos y condiciones.</p>
           <h2 className="text-xl font-bold text-text-main">1. Servicios</h2>
           <p>Se ofrecen servicios de terapia psicológica presencial en Querétaro. La agenda de citas está sujeta a disponibilidad.</p>
           <h2 className="text-xl font-bold text-text-main">2. Cancelaciones y Reprogramaciones</h2>

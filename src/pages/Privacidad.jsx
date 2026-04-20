@@ -13,7 +13,7 @@ export default function Privacidad() {
         <div className="space-y-6 text-gray-700 leading-relaxed font-medium">
           <p>De conformidad con lo establecido en la Ley Federal de Protección de Datos Personales en Posesión de los Particulares, se pone a disposición el presente Aviso de Privacidad.</p>
           <h2 className="text-xl font-bold text-text-main">1. Identidad y domicilio del responsable</h2>
-          <p>El Psic. Jorge A. Gutiérrez, con domicilio en Querétaro, México, es responsable del uso y protección de sus datos personales.</p>
+          <p>El Centro de Atención Psicológica y Pedagógica de Querétaro, con domicilio en Querétaro, México, es responsable del uso y protección de sus datos personales.</p>
           <h2 className="text-xl font-bold text-text-main">2. Datos personales que se recaban</h2>
           <p>Para llevar a cabo las finalidades descritas en este aviso, utilizaremos datos de identificación, contacto y, en su caso, datos sensibles relativos a su estado de salud mental, los cuales serán tratados con estricta confidencialidad.</p>
           <h2 className="text-xl font-bold text-text-main">3. Finalidades del tratamiento de datos</h2>
