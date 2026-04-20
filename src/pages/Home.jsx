@@ -89,10 +89,6 @@ export default function Home() {
 
       <section className="pt-40 pb-20 px-6">
         <div className="max-w-4xl mx-auto text-center space-y-10">
-          <div className="inline-flex items-center gap-2 bg-white border border-accent-orange/20 px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest text-accent-orange shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-accent-orange animate-pulse"></span>
-            Consulta Presencial en Querétaro
-          </div>
           <h1 className="text-5xl md:text-7xl font-black text-text-main leading-[1.1] tracking-tight">
             Encuentra el equilibrio <br /> <span className="text-accent-green italic">que necesitas.</span>
           </h1>
@@ -279,7 +275,7 @@ export default function Home() {
           </div>
         </div>
         <div className="max-w-6xl mx-auto px-6 mt-32 pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between gap-6 items-center">
-          <p className="text-xs font-black uppercase tracking-widest opacity-50">© 2026 {data.hero.name} | Cédula Profesional: 12345678</p>
+          <p className="text-xs font-black uppercase tracking-widest opacity-50">© 2026 {data.hero.name}</p>
           <div className="flex flex-wrap justify-center md:justify-end gap-4 mt-4 md:mt-0">
             <Link to="/privacidad" className="text-xs font-bold text-gray-300 hover:text-white transition-colors">Privacidad</Link>
             <Link to="/terminos" className="text-xs font-bold text-gray-300 hover:text-white transition-colors">Términos</Link>
