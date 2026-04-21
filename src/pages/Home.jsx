@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import logoPsic from '../assets/logopsichort.jpeg';
+import defaultLogo from '../assets/logopsichort.jpeg';
 import unamLogo from '../assets/UNAM_Logo.jpeg';
 
 export default function Home() {
@@ -65,6 +65,8 @@ export default function Home() {
     );
   }
 
+  const siteLogo = data.hero.logo || defaultLogo;
+
   return (
     <div className="min-h-screen bg-bg-main text-text-main font-sans selection:bg-accent-yellow selection:text-text-main relative">
       
@@ -78,7 +80,7 @@ export default function Home() {
       <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-xl z-50 border-b border-gray-200 shadow-sm">
         <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <img src={logoPsic} alt="Logo" className="h-14 w-auto object-contain" />
+            <img src={siteLogo} alt="Logo" className="h-14 w-auto object-contain" />
           </div>
           <div className="flex items-center gap-6">
             <Link to="/gracias" className="bg-whatsapp text-white px-6 py-3 rounded-xl font-black text-sm shadow-md hover:scale-105 transition-all">
@@ -199,7 +201,7 @@ export default function Home() {
       <footer id="contacto" className="bg-text-main text-bg-main pt-32 pb-12 mt-20 rounded-t-[4rem]">
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-20">
           <div className="space-y-8">
-            <img src={logoPsic} alt="Logo Footer" className="h-28 w-auto object-contain bg-white px-6 py-4 rounded-3xl" />
+            <img src={siteLogo} alt="Logo Footer" className="h-28 w-auto object-contain bg-white px-6 py-4 rounded-3xl" />
             <p className="text-base leading-relaxed font-semibold opacity-90">
               Comprometidos con la salud mental de la comunidad de Querétaro a través de evidencia científica y calidez humana.
             </p>

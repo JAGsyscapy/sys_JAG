@@ -1,12 +1,26 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import logoPsic from '../assets/logopsichort.jpeg';
+import defaultLogo from '../assets/logopsichort.jpeg';
 
 export default function Terminos() {
+  const [siteLogo, setSiteLogo] = useState(defaultLogo);
+
+  useEffect(() => {
+    fetch('/api/data')
+      .then(res => res.json())
+      .then(data => {
+        if(data && data.hero && data.hero.logo) {
+          setSiteLogo(data.hero.logo);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="min-h-screen bg-bg-main p-6 md:p-12 font-sans text-text-main">
       <div className="max-w-4xl mx-auto bg-white p-8 md:p-16 rounded-[3rem] shadow-xl border border-gray-200 space-y-8">
         <div className="flex items-center justify-between border-b border-gray-200 pb-8">
-          <img src={logoPsic} alt="Logo" className="h-16 w-auto object-contain" />
+          <img src={siteLogo} alt="Logo" className="h-16 w-auto object-contain" />
           <Link to="/" className="bg-gray-100 text-gray-600 px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-gray-200 transition-colors">Volver</Link>
         </div>
         <h1 className="text-3xl md:text-4xl font-black tracking-tight">Términos y Condiciones</h1>

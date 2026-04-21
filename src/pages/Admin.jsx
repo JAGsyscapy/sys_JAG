@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logoPsic from '../assets/logopsichort.jpeg';
+import defaultLogo from '../assets/logopsichort.jpeg';
 
 const Modal = ({ title, onClose, onSave, saving, children }) => (
   <div className="fixed inset-0 bg-text-main/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
@@ -52,6 +52,7 @@ export default function Admin() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [imageFile, setImageFile] = useState(null);
+  const [logoFile, setLogoFile] = useState(null);
   const [deletedImages, setDeletedImages] = useState([]);
   const [newGalImg, setNewGalImg] = useState(null);
   const [newGalTitle, setNewGalTitle] = useState('');
@@ -114,12 +115,18 @@ export default function Admin() {
   const saveChanges = async () => {
     setSaving(true);
     let currentImage = data.hero.image;
+    let currentLogo = data.hero.logo;
     let pendingDeletes = [...deletedImages];
 
     try {
       if (imageFile) {
         if (currentImage) pendingDeletes.push(currentImage);
         currentImage = await uploadToCloudinary(imageFile);
+      }
+      
+      if (logoFile) {
+        if (currentLogo) pendingDeletes.push(currentLogo);
+        currentLogo = await uploadToCloudinary(logoFile);
       }
 
       const finalGallery = [];
@@ -134,7 +141,7 @@ export default function Admin() {
 
       const payload = { 
         ...data, 
-        hero: { ...data.hero, image: currentImage },
+        hero: { ...data.hero, image: currentImage, logo: currentLogo },
         gallery: finalGallery,
         deletedImages: pendingDeletes
       };
@@ -152,6 +159,7 @@ export default function Admin() {
         setData(payload);
         setActiveModal(null);
         setImageFile(null);
+        setLogoFile(null);
         setDeletedImages([]);
         showToast('Cambios guardados exitosamente', 'success');
       } else {
@@ -202,6 +210,7 @@ export default function Admin() {
   const handleCloseModal = () => {
     setActiveModal(null);
     setImageFile(null);
+    setLogoFile(null);
     setNewGalImg(null);
     setNewGalTitle('');
   };
@@ -211,7 +220,7 @@ export default function Admin() {
       <div className="min-h-screen bg-bg-main flex items-center justify-center p-6 font-sans">
         <form onSubmit={handleLogin} className="bg-white p-12 rounded-[3rem] shadow-xl max-w-md w-full space-y-8 border border-gray-200">
           <div className="flex flex-col items-center justify-center space-y-4">
-            <img src={logoPsic} alt="Logo" className="h-20 w-auto object-contain" />
+            <img src={defaultLogo} alt="Logo" className="h-20 w-auto object-contain" />
             <div className="text-center">
               <h2 className="text-3xl font-black text-text-main tracking-tight">Acceso Admin</h2>
               <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mt-1">Gestión de Contenidos</p>
@@ -231,6 +240,8 @@ export default function Admin() {
 
   if (!data) return null;
 
+  const currentLogoDisplay = logoFile ? URL.createObjectURL(logoFile) : (data.hero.logo || defaultLogo);
+
   return (
     <div className="min-h-screen bg-gray-100 p-6 md:p-12 font-sans pb-40">
       
@@ -246,7 +257,7 @@ export default function Admin() {
       <div className="max-w-6xl mx-auto space-y-12">
         <header className="flex flex-col md:flex-row justify-between items-center gap-6 bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-gray-200">
           <div className="flex items-center gap-6">
-            <img src={logoPsic} alt="Logo Admin" className="h-16 w-auto object-contain hidden md:block" />
+            <img src={data.hero.logo || defaultLogo} alt="Logo Admin" className="h-16 w-auto object-contain hidden md:block" />
             <div className="text-center md:text-left">
               <h1 className="text-3xl md:text-4xl font-black text-text-main tracking-tight">Dashboard Administrativo</h1>
               <p className="text-xs font-black text-gray-500 uppercase tracking-widest mt-1">Gestión de datos normalizados</p>
@@ -258,8 +269,8 @@ export default function Admin() {
         </header>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <AdminCard title="Cabecera y Hero" subtitle="Nombre y Terapia" onClick={() => setActiveModal('hero')} />
-          <AdminCard title="Sobre Mí" subtitle="Formación y Enfoque" onClick={() => setActiveModal('about')} />
+          <AdminCard title="Cabecera, Hero y Logo" subtitle="Nombre, Terapia y Logo Principal" onClick={() => setActiveModal('hero')} />
+          <AdminCard title="Sobre Mí" subtitle="Enfoque y Objetivo" onClick={() => setActiveModal('about')} />
           <AdminCard title="Servicios" subtitle="Lista Individual" onClick={() => setActiveModal('services')} />
           <AdminCard title="Tarifas" subtitle="Precios y Promociones" onClick={() => setActiveModal('pricing')} />
           <AdminCard title="Contacto y Mapa" subtitle="Teléfono, Redes y Ubicación" onClick={() => setActiveModal('contact')} />
@@ -270,6 +281,18 @@ export default function Admin() {
         {activeModal === 'hero' && (
           <Modal title="Editar Inicio" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
             <div className="space-y-6">
+              
+              <div className="space-y-2">
+                <span className="text-xs font-black uppercase text-text-main ml-2">Logo Principal del Sitio</span>
+                <div className="relative w-full h-40 bg-gray-50 border-2 border-dashed border-gray-300 rounded-[2rem] flex flex-col items-center justify-center overflow-hidden hover:bg-gray-100 transition-colors group">
+                  <img src={currentLogoDisplay} className="w-full h-full object-contain p-4 group-hover:opacity-40 transition-opacity" />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="bg-text-main text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl">Reemplazar Logo</span>
+                  </div>
+                  <input type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" onChange={e => setLogoFile(e.target.files[0])} />
+                </div>
+              </div>
+
               <Input label="Nombre Profesional" value={data.hero.name} onChange={v => setData({...data, hero: {...data.hero, name: v}})} />
               <Input label="Título de Subtítulo" value={data.hero.subtitle} onChange={v => setData({...data, hero: {...data.hero, subtitle: v}})} />
               <Input label="Propuesta de Terapia" value={data.hero.therapy} onChange={v => setData({...data, hero: {...data.hero, therapy: v}})} />
@@ -280,7 +303,6 @@ export default function Admin() {
         {activeModal === 'about' && (
           <Modal title="Editar Especialista" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
             <div className="space-y-4">
-              <Input label="Formación" value={data.about.education} onChange={v => setData({...data, about: {...data.about, education: v}})} />
               <Input label="Enfoque Clínico" value={data.about.approach} onChange={v => setData({...data, about: {...data.about, approach: v}})} />
               <Input label="Objetivo" value={data.about.objective} onChange={v => setData({...data, about: {...data.about, objective: v}})} />
               <Input label="Público Objetivo" value={data.about.target} onChange={v => setData({...data, about: {...data.about, target: v}})} />

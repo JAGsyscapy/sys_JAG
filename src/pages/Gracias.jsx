@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import logoPsic from '../assets/logopsichort.jpeg';
+import defaultLogo from '../assets/logopsichort.jpeg';
 
 export default function Gracias() {
   const [waLink, setWaLink] = useState('');
+  const [siteLogo, setSiteLogo] = useState(defaultLogo);
 
   useEffect(() => {
     if (typeof window.gtag === 'function') {
@@ -16,6 +17,9 @@ export default function Gracias() {
         if(data && data.hero && data.hero.phone) {
           const link = `https://wa.me/52${data.hero.phone}?text=CITA`;
           setWaLink(link);
+          if (data.hero.logo) {
+            setSiteLogo(data.hero.logo);
+          }
           setTimeout(() => {
             window.location.href = link;
           }, 3000);
@@ -26,7 +30,7 @@ export default function Gracias() {
   return (
     <div className="min-h-screen bg-bg-main flex flex-col items-center justify-center p-6 text-center font-sans">
       <div className="bg-white p-10 rounded-[3rem] shadow-xl max-w-lg w-full space-y-6 border border-gray-200">
-        <img src={logoPsic} alt="Logo" className="h-20 w-auto mx-auto object-contain" />
+        <img src={siteLogo} alt="Logo" className="h-20 w-auto mx-auto object-contain" />
         <h1 className="text-4xl font-black text-text-main tracking-tight">¡Gracias por tu interés!</h1>
         <p className="text-lg text-gray-600 font-medium">Serás redirigido a WhatsApp en unos segundos para confirmar tu cita.</p>
         
