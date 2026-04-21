@@ -54,7 +54,9 @@ export default async function handler(req, res) {
           therapy: prof.therapy,
           phone: prof.phone,
           image: prof.image,
-          logo: prof.logo
+          logo: prof.logo,
+          titleMain: prof.title_main || 'Encuentra el equilibrio',
+          titleItalic: prof.title_italic || 'que necesitas.'
         },
         about: {
           education: prof.education,
@@ -104,11 +106,13 @@ export default async function handler(req, res) {
         await client.query(`
           UPDATE professional SET
           name = $1, subtitle = $2, therapy = $3, phone = $4, image = $5,
-          education = $6, approach = $7, objective = $8, target = $9, logo = $10
+          education = $6, approach = $7, objective = $8, target = $9, logo = $10,
+          title_main = $11, title_italic = $12
           WHERE id = 1
         `, [
           newData.hero.name, newData.hero.subtitle, newData.hero.therapy, newData.hero.phone, newData.hero.image,
-          newData.about.education, newData.about.approach, newData.about.objective, newData.about.target, newData.hero.logo
+          newData.about.education, newData.about.approach, newData.about.objective, newData.about.target, newData.hero.logo,
+          newData.hero.titleMain, newData.hero.titleItalic
         ]);
 
         await client.query('DELETE FROM service WHERE professional_id = 1');
