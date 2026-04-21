@@ -15,7 +15,8 @@ export default function Gracias() {
       .then(res => res.json())
       .then(data => {
         if(data && data.hero && data.hero.phone) {
-          const link = `https://wa.me/52${data.hero.phone}?text=CITA`;
+          const msg = encodeURIComponent('Hola buen dia, mi nombre es:\nY el motivo de consulta es:');
+          const link = `https://wa.me/52${data.hero.phone}?text=${msg}`;
           setWaLink(link);
           if (data.hero.logo) {
             setSiteLogo(data.hero.logo);

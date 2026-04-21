@@ -260,7 +260,7 @@ export default function Admin() {
             <img src={data.hero.logo || defaultLogo} alt="Logo Admin" className="h-16 w-auto object-contain hidden md:block" />
             <div className="text-center md:text-left">
               <h1 className="text-3xl md:text-4xl font-black text-text-main tracking-tight">Dashboard Administrativo</h1>
-              <p className="text-xs font-black text-gray-500 uppercase tracking-widest mt-1">Gestión de datos normalizados</p>
+              <p className="text-xs font-black text-gray-500 uppercase tracking-widest mt-1">Gestión de datos</p>
             </div>
           </div>
           <button onClick={() => {localStorage.removeItem('token'); setToken(null); navigate('/')}} className="bg-red-50 text-red-600 px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-red-100 transition-colors border border-red-200">
@@ -272,7 +272,6 @@ export default function Admin() {
           <AdminCard title="Cabecera, Hero y Logo" subtitle="Nombre, Terapia y Logo Principal" onClick={() => setActiveModal('hero')} />
           <AdminCard title="Sobre Mí" subtitle="Enfoque y Objetivo" onClick={() => setActiveModal('about')} />
           <AdminCard title="Servicios" subtitle="Lista Individual" onClick={() => setActiveModal('services')} />
-          <AdminCard title="Tarifas" subtitle="Precios y Promociones" onClick={() => setActiveModal('pricing')} />
           <AdminCard title="Contacto y Mapa" subtitle="Teléfono, Redes y Ubicación" onClick={() => setActiveModal('contact')} />
           <AdminCard title="Horarios" subtitle="Disponibilidad Diaria" onClick={() => setActiveModal('hours')} />
           <AdminCard title="Galería de Fotos" subtitle="Añadir o Quitar Imágenes" onClick={() => setActiveModal('gallery')} />
@@ -363,15 +362,6 @@ export default function Admin() {
               >
                 + Añadir Servicio
               </button>
-            </div>
-          </Modal>
-        )}
-
-        {activeModal === 'pricing' && (
-          <Modal title="Editar Tarifas" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
-            <div className="grid grid-cols-2 gap-6">
-              <Input label="Precio Regular" value={data.pricing.regular} onChange={v => setData({...data, pricing: {...data.pricing, regular: v}})} />
-              <Input label="Precio Promoción" value={data.pricing.promo} onChange={v => setData({...data, pricing: {...data.pricing, promo: v}})} />
             </div>
           </Modal>
         )}

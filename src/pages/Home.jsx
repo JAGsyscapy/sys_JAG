@@ -278,7 +278,7 @@ export default function Home() {
           </div>
         </div>
         <div className="max-w-6xl mx-auto px-6 mt-32 pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between gap-6 items-center">
-          <p className="text-xs font-black uppercase tracking-widest opacity-50">© 2026 {data.hero.name}</p>
+          <p className="text-xs font-black uppercase tracking-widest opacity-50">© 2026 Centro de Atención Psicológica y Pedagógica de Querétaro</p>
           <div className="flex flex-wrap justify-center md:justify-end gap-4 mt-4 md:mt-0">
             <Link to="/privacidad" className="text-xs font-bold text-gray-300 hover:text-white transition-colors">Privacidad</Link>
             <Link to="/terminos" className="text-xs font-bold text-gray-300 hover:text-white transition-colors">Términos</Link>

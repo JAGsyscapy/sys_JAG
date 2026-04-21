@@ -41,9 +41,6 @@ export default async function handler(req, res) {
       const servRes = await pool.query('SELECT name FROM service WHERE professional_id = 1');
       const services = servRes.rows.map(row => row.name);
 
-      const priceRes = await pool.query('SELECT * FROM pricing WHERE professional_id = 1');
-      const pricing = priceRes.rows[0];
-
       const contactRes = await pool.query('SELECT * FROM contact WHERE professional_id = 1');
       const contact = contactRes.rows[0];
 
@@ -66,10 +63,6 @@ export default async function handler(req, res) {
           target: prof.target
         },
         services: services,
-        pricing: {
-          promo: pricing.promo,
-          regular: pricing.regular
-        },
         contact: {
           displayPhone: contact.display_phone,
           address: contact.address,
@@ -131,10 +124,6 @@ export default async function handler(req, res) {
             }
           }
         }
-
-        await client.query(`
-          UPDATE pricing SET promo = $1, regular = $2 WHERE professional_id = 1
-        `, [newData.pricing.promo, newData.pricing.regular]);
 
         await client.query(`
           UPDATE contact SET
