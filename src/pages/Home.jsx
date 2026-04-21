@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import logoPsic from '../assets/logopsichort.jpeg';
+import unamLogo from '../assets/UNAM_Logo.jpeg';
 
 export default function Home() {
   const [data, setData] = useState(null);
@@ -114,8 +115,8 @@ export default function Home() {
             </h3>
             <div className="space-y-8">
               <div>
-                <h4 className="text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Formación</h4>
-                <p className="text-xl font-bold text-text-main">{data.about.education}</p>
+                <img src={unamLogo} alt="Logo UNAM" className="h-16 w-auto object-contain mb-2" />
+                <p className="text-xl font-bold text-text-main">UNAM</p>
               </div>
               <div>
                 <h4 className="text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Enfoque</h4>
@@ -275,7 +276,7 @@ export default function Home() {
           </div>
         </div>
         <div className="max-w-6xl mx-auto px-6 mt-32 pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between gap-6 items-center">
-          <p className="text-xs font-black uppercase tracking-widest opacity-50">© 2026 Centro de Atención Psicológica y Pedagógica de Querétaro</p>
+          <p className="text-xs font-black uppercase tracking-widest opacity-50">© 2026 {data.hero.name}</p>
           <div className="flex flex-wrap justify-center md:justify-end gap-4 mt-4 md:mt-0">
             <Link to="/privacidad" className="text-xs font-bold text-gray-300 hover:text-white transition-colors">Privacidad</Link>
             <Link to="/terminos" className="text-xs font-bold text-gray-300 hover:text-white transition-colors">Términos</Link>
