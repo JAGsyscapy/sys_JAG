@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import defaultLogo from '../assets/logopsichort.jpeg';
-import unamLogo from '../assets/UNAM_Logo.jpeg';
 
 export default function Home() {
   const [data, setData] = useState(null);
@@ -80,7 +79,7 @@ export default function Home() {
       <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-xl z-50 border-b border-gray-200 shadow-sm">
         <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <img src={siteLogo} alt="Logo" className="h-14 w-auto object-contain" />
+            <img src={siteLogo} alt="Logo" className="h-20 w-auto object-contain" />
           </div>
           <div className="flex items-center gap-6">
             <Link to="/gracias" className="bg-whatsapp text-white px-6 py-3 rounded-xl font-black text-sm shadow-md hover:scale-105 transition-all">
@@ -96,15 +95,12 @@ export default function Home() {
             {data.hero.titleMain} <br /> <span className="text-accent-green italic">{data.hero.titleItalic}</span>
           </h1>
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/gracias" className="inline-block bg-whatsapp text-white font-black uppercase text-sm tracking-widest px-8 py-4 rounded-full shadow-lg hover:scale-105 transition-transform w-full sm:w-auto text-center">
-              Agendar Cita Ahora
-            </Link>
-            <a href="#servicios" className="inline-block bg-white border border-gray-200 text-text-main font-black uppercase text-sm tracking-widest px-8 py-4 rounded-full shadow-sm hover:border-accent-orange hover:text-accent-orange transition-colors w-full sm:w-auto text-center">
+            <a href="#servicios" className="inline-block bg-accent-yellow border border-accent-yellow text-text-main font-black uppercase text-sm tracking-widest px-8 py-4 rounded-full shadow-sm hover:bg-[#d4a625] hover:border-[#d4a625] transition-colors w-full sm:w-auto text-center">
               Explorar Servicios ↓
             </a>
           </div>
           <p className="text-xl text-text-main max-w-2xl mx-auto leading-relaxed font-semibold pt-6">
-            {data.hero.therapy}. Especialista en Terapia Cognitivo Conductual para adolescentes y adultos.
+            {data.hero.therapy}
           </p>
         </div>
       </section>
@@ -117,21 +113,15 @@ export default function Home() {
             </h3>
             <div className="space-y-8">
               <div>
-                <img src={unamLogo} alt="Logo UNAM" className="h-16 w-auto object-contain mb-2" />
-                <p className="text-xl font-bold text-text-main">UNAM</p>
-              </div>
-              <div>
-                <h4 className="text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Enfoque</h4>
-                <p className="text-xl font-bold text-text-main">{data.about.approach}</p>
-              </div>
-              <div>
                 <h4 className="text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Objetivo</h4>
                 <p className="text-xl font-bold text-text-main">{data.about.objective}</p>
+                <p className="text-lg font-bold text-accent-green mt-4">Sesiones virtuales y presencial</p>
               </div>
             </div>
           </div>
-          <div className="w-full bg-bg-main rounded-[2.5rem] shadow-inner border border-gray-200 flex items-center justify-center p-6">
+          <div className="w-full bg-bg-main rounded-[2.5rem] shadow-inner border border-gray-200 flex flex-col items-center justify-center p-6">
             {data.hero.image && <img src={data.hero.image} alt="Consultorio" className="w-full max-h-[500px] object-contain rounded-2xl" />}
+            <p className="text-2xl font-black text-text-main mt-6 tracking-widest text-center">UNAM</p>
           </div>
         </div>
       </section>
@@ -141,13 +131,13 @@ export default function Home() {
           <h3 className="text-4xl font-black text-text-main">Especialidades</h3>
           <p className="text-text-main font-semibold text-lg">Tratamientos enfocados en resultados y bienestar.</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {data.services.map((s, i) => (
-            <div key={i} className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-md hover:shadow-xl hover:border-accent-green/30 hover:-translate-y-2 transition-all">
-              <div className="w-12 h-12 bg-accent-yellow rounded-xl mb-6 flex items-center justify-center text-text-main font-black text-xl shadow-inner">
+            <div key={i} className="bg-white p-6 rounded-[1.5rem] border border-gray-100 shadow-md hover:shadow-xl hover:border-accent-green/30 hover:-translate-y-1 transition-all">
+              <div className="w-10 h-10 bg-accent-yellow rounded-xl mb-4 flex items-center justify-center text-text-main font-black text-lg shadow-inner">
                 {i + 1}
               </div>
-              <p className="font-black text-xl text-text-main leading-tight">{s}</p>
+              <p className="font-black text-lg text-text-main leading-tight">{s}</p>
             </div>
           ))}
         </div>
@@ -329,19 +319,6 @@ export default function Home() {
             <p className="text-xs font-bold text-text-main">{data.contact.email}</p>
           </a>
         )}
-
-        <div className="flex gap-2 pointer-events-auto" style={{ animationDelay: '300ms' }}>
-          {data.contact.facebook && (
-            <a href={data.contact.facebook} target="_blank" rel="noreferrer" className="bg-[#1877F2] p-2 rounded-full animate-bounce shadow-lg hover:scale-110 transition-transform">
-              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V7.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-            </a>
-          )}
-          {data.contact.instagram && (
-            <a href={data.contact.instagram.startsWith('http') ? data.contact.instagram : `https://${data.contact.instagram}`} target="_blank" rel="noreferrer" className="bg-pink-600 p-2 rounded-full animate-bounce shadow-lg hover:scale-110 transition-transform" style={{ animationDelay: '400ms' }}>
-              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
-            </a>
-          )}
-        </div>
       </div>
 
       <Link

@@ -270,7 +270,7 @@ export default function Admin() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <AdminCard title="Cabecera, Hero y Logo" subtitle="Nombre, Terapia y Logo Principal" onClick={() => setActiveModal('hero')} />
-          <AdminCard title="Sobre Mí" subtitle="Enfoque y Objetivo" onClick={() => setActiveModal('about')} />
+          <AdminCard title="Sobre Mí" subtitle="Objetivo" onClick={() => setActiveModal('about')} />
           <AdminCard title="Servicios" subtitle="Lista Individual" onClick={() => setActiveModal('services')} />
           <AdminCard title="Contacto y Mapa" subtitle="Teléfono, Redes y Ubicación" onClick={() => setActiveModal('contact')} />
           <AdminCard title="Horarios" subtitle="Disponibilidad Diaria" onClick={() => setActiveModal('hours')} />
@@ -294,10 +294,19 @@ export default function Admin() {
 
               <Input label="Título Principal (Línea 1)" value={data.hero.titleMain} onChange={v => setData({...data, hero: {...data.hero, titleMain: v}})} />
               <Input label="Título Resaltado (Línea 2)" value={data.hero.titleItalic} onChange={v => setData({...data, hero: {...data.hero, titleItalic: v}})} />
-
               <Input label="Nombre Profesional" value={data.hero.name} onChange={v => setData({...data, hero: {...data.hero, name: v}})} />
               <Input label="Título de Subtítulo" value={data.hero.subtitle} onChange={v => setData({...data, hero: {...data.hero, subtitle: v}})} />
-              <Input label="Propuesta de Terapia" value={data.hero.therapy} onChange={v => setData({...data, hero: {...data.hero, therapy: v}})} />
+              
+              <div className="space-y-2">
+                <span className="text-xs font-black uppercase text-text-main ml-2">Texto descriptivo principal</span>
+                <textarea 
+                  className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-text-main min-h-[100px]" 
+                  value={data.hero.therapy} 
+                  onChange={e => setData({...data, hero: {...data.hero, therapy: e.target.value}})}
+                  placeholder="Nosotros ofrecemos un servicio a un nivel particular, cada paciente es especial y cada paciente merece toda nuestra atención!"
+                />
+              </div>
+
             </div>
           </Modal>
         )}
@@ -305,7 +314,6 @@ export default function Admin() {
         {activeModal === 'about' && (
           <Modal title="Editar Especialista" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
             <div className="space-y-4">
-              <Input label="Enfoque Clínico" value={data.about.approach} onChange={v => setData({...data, about: {...data.about, approach: v}})} />
               <Input label="Objetivo" value={data.about.objective} onChange={v => setData({...data, about: {...data.about, objective: v}})} />
               <Input label="Público Objetivo" value={data.about.target} onChange={v => setData({...data, about: {...data.about, target: v}})} />
               
