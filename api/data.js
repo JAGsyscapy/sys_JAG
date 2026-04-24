@@ -12,15 +12,11 @@ const deleteCloudinaryImage = async (url) => {
     if (parts.length < 2) return;
     const fileWithExt = parts[1].split('/').slice(1).join('/');
     const publicId = fileWithExt.substring(0, fileWithExt.lastIndexOf('.'));
-    
     const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
     const apiKey = process.env.CLOUDINARY_API_KEY;
     const apiSecret = process.env.CLOUDINARY_API_SECRET;
-    
     if (!cloudName || !apiKey || !apiSecret) return;
-
     const auth = Buffer.from(apiKey + ':' + apiSecret).toString('base64');
-    
     await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/resources/image/upload`, {
       method: 'DELETE',
       headers: {
@@ -37,13 +33,10 @@ export default async function handler(req, res) {
     try {
       const profRes = await pool.query('SELECT * FROM professional WHERE id = 1');
       const prof = profRes.rows[0];
-
       const servRes = await pool.query('SELECT name FROM service WHERE professional_id = 1');
       const services = servRes.rows.map(row => row.name);
-
       const contactRes = await pool.query('SELECT * FROM contact WHERE professional_id = 1');
       const contact = contactRes.rows[0];
-
       const galleryRes = await pool.query('SELECT url, title FROM gallery WHERE professional_id = 1');
       const gallery = galleryRes.rows;
 
@@ -55,12 +48,12 @@ export default async function handler(req, res) {
           phone: prof.phone,
           image: prof.image,
           logo: prof.logo,
-          titleMain: prof.title_main || 'Encuentra el equilibrio',
-          titleItalic: prof.title_italic || 'que necesitas.'
+          titleMain: prof.title_main,
+          titleItalic: prof.title_italic,
+          description: prof.description || 'Nosotros ofrecemos un servicio a un nivel particular, cada paciente es especial y cada paciente merece toda nuestra atención!'
         },
         about: {
           education: prof.education,
-          approach: prof.approach,
           objective: prof.objective,
           target: prof.target
         },
@@ -82,7 +75,6 @@ export default async function handler(req, res) {
         },
         gallery: gallery
       };
-
       return res.status(200).json(responseData);
     } catch (error) {
       return res.status(500).json({ error: 'Database error' });
@@ -93,42 +85,33 @@ export default async function handler(req, res) {
     try {
       const authHeader = req.headers.authorization || req.headers.Authorization;
       if (!authHeader) return res.status(401).json({ error: 'Unauthorized' });
-
       const token = authHeader.split(' ')[1];
       jwt.verify(token, process.env.JWT_SECRET);
-
       const newData = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
       const client = await pool.connect();
-
       try {
         await client.query('BEGIN');
-
         await client.query(`
           UPDATE professional SET
           name = $1, subtitle = $2, therapy = $3, phone = $4, image = $5,
-          education = $6, approach = $7, objective = $8, target = $9, logo = $10,
-          title_main = $11, title_italic = $12
+          education = $6, objective = $7, target = $8, logo = $9,
+          title_main = $10, title_italic = $11, description = $12
           WHERE id = 1
         `, [
           newData.hero.name, newData.hero.subtitle, newData.hero.therapy, newData.hero.phone, newData.hero.image,
-          newData.about.education, newData.about.approach, newData.about.objective, newData.about.target, newData.hero.logo,
-          newData.hero.titleMain, newData.hero.titleItalic
+          newData.about.education, newData.about.objective, newData.about.target, newData.hero.logo,
+          newData.hero.titleMain, newData.hero.titleItalic, newData.hero.description
         ]);
-
         await client.query('DELETE FROM service WHERE professional_id = 1');
         for (const s of newData.services) {
           if (s) await client.query('INSERT INTO service (professional_id, name) VALUES (1, $1)', [s]);
         }
-
         await client.query('DELETE FROM gallery WHERE professional_id = 1');
-        if (newData.gallery && newData.gallery.length > 0) {
+        if (newData.gallery) {
           for (const item of newData.gallery) {
-            if (item.url) {
-              await client.query('INSERT INTO gallery (professional_id, url, title) VALUES (1, $1, $2)', [item.url, item.title]);
-            }
+            if (item.url) await client.query('INSERT INTO gallery (professional_id, url, title) VALUES (1, $1, $2)', [item.url, item.title]);
           }
         }
-
         await client.query(`
           UPDATE contact SET
           display_phone = $1, address = $2, monday = $3, tuesday = $4, wednesday = $5, thursday = $6, friday = $7, saturday = $8, sunday = $9, email = $10, instagram = $11, facebook = $12, map_url = $13
@@ -139,27 +122,20 @@ export default async function handler(req, res) {
           newData.contact.thursday, newData.contact.friday, newData.contact.saturday, newData.contact.sunday,
           newData.contact.email, newData.contact.instagram, newData.contact.facebook, newData.contact.mapUrl
         ]);
-
         await client.query('COMMIT');
-
-        if (newData.deletedImages && newData.deletedImages.length > 0) {
-          for (const oldUrl of newData.deletedImages) {
-            await deleteCloudinaryImage(oldUrl);
-          }
+        if (newData.deletedImages) {
+          for (const oldUrl of newData.deletedImages) await deleteCloudinaryImage(oldUrl);
         }
-
       } catch (e) {
         await client.query('ROLLBACK');
         throw e;
       } finally {
         client.release();
       }
-
       return res.status(200).json({ success: true });
     } catch (error) {
       return res.status(401).json({ error: 'Invalid token or update failed' });
     }
   }
-
   return res.status(405).json({ error: 'Method not allowed' });
 }
