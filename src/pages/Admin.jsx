@@ -22,13 +22,15 @@ const Modal = ({ title, onClose, onSave, saving, children }) => (
   </div>
 );
 
-const AdminCard = ({ title, subtitle, onClick }) => (
-  <button onClick={onClick} className="bg-white p-8 rounded-[2rem] border border-gray-200 shadow-sm hover:shadow-xl hover:border-accent-green hover:-translate-y-1 transition-all text-left group w-full">
-    <div className="w-12 h-12 bg-gray-50 border border-gray-100 rounded-xl mb-4 group-hover:bg-accent-green group-hover:border-accent-green transition-colors flex items-center justify-center text-gray-400 group-hover:text-white">
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+const AdminCard = ({ title, subtitle, icon, colorClass, onClick }) => (
+  <button onClick={onClick} className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all text-left flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full group">
+    <div className={`w-14 h-14 shrink-0 rounded-2xl flex items-center justify-center text-white shadow-inner ${colorClass}`}>
+      {icon}
     </div>
-    <h4 className="text-xl font-black tracking-tight text-text-main">{title}</h4>
-    <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">{subtitle}</p>
+    <div>
+      <h4 className="text-lg font-black text-text-main group-hover:text-accent-green transition-colors">{title}</h4>
+      <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mt-1">{subtitle}</p>
+    </div>
   </button>
 );
 
@@ -254,13 +256,13 @@ export default function Admin() {
         </div>
       )}
 
-      <div className="max-w-6xl mx-auto space-y-12">
+      <div className="max-w-5xl mx-auto space-y-12">
         <header className="flex flex-col md:flex-row justify-between items-center gap-6 bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-gray-200">
           <div className="flex items-center gap-6">
             <img src={data.hero.logo || defaultLogo} alt="Logo Admin" className="h-16 w-auto object-contain hidden md:block" />
             <div className="text-center md:text-left">
               <h1 className="text-3xl md:text-4xl font-black text-text-main tracking-tight">Dashboard Administrativo</h1>
-              <p className="text-xs font-black text-gray-500 uppercase tracking-widest mt-1">Gestión de datos normalizados</p>
+              <p className="text-xs font-black text-gray-500 uppercase tracking-widest mt-1">Gestor de sitio web fácil y rápido</p>
             </div>
           </div>
           <button onClick={() => {localStorage.removeItem('token'); setToken(null); navigate('/')}} className="bg-red-50 text-red-600 px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-red-100 transition-colors border border-red-200">
@@ -268,13 +270,77 @@ export default function Admin() {
           </button>
         </header>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <AdminCard title="Cabecera, Hero y Logo" subtitle="Nombre, Terapia y Logo Principal" onClick={() => setActiveModal('hero')} />
-          <AdminCard title="Sobre Mí" subtitle="Objetivo" onClick={() => setActiveModal('about')} />
-          <AdminCard title="Servicios" subtitle="Lista Individual" onClick={() => setActiveModal('services')} />
-          <AdminCard title="Contacto y Mapa" subtitle="Teléfono, Redes y Ubicación" onClick={() => setActiveModal('contact')} />
-          <AdminCard title="Horarios" subtitle="Disponibilidad Diaria" onClick={() => setActiveModal('hours')} />
-          <AdminCard title="Galería de Fotos" subtitle="Añadir o Quitar Imágenes" onClick={() => setActiveModal('gallery')} />
+        <div className="space-y-10">
+          
+          <div className="space-y-4">
+            <h2 className="text-xl font-black text-text-main flex items-center gap-2">
+              <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              Identidad y Diseño Principal
+            </h2>
+            <div className="grid md:grid-cols-2 gap-4">
+              <AdminCard 
+                title="Cabecera y Textos" 
+                subtitle="Logo, Nombre y Mensaje Principal" 
+                colorClass="bg-blue-500" 
+                icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>} 
+                onClick={() => setActiveModal('hero')} 
+              />
+              <AdminCard 
+                title="Sobre Mí" 
+                subtitle="Objetivo y Foto Principal" 
+                colorClass="bg-indigo-500" 
+                icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>} 
+                onClick={() => setActiveModal('about')} 
+              />
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-xl font-black text-text-main flex items-center gap-2">
+              <svg className="w-6 h-6 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+              Servicios y Contenido
+            </h2>
+            <div className="grid md:grid-cols-2 gap-4">
+              <AdminCard 
+                title="Especialidades" 
+                subtitle="Lista de Servicios Ofrecidos" 
+                colorClass="bg-pink-500" 
+                icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>} 
+                onClick={() => setActiveModal('services')} 
+              />
+              <AdminCard 
+                title="Galería de Fotos" 
+                subtitle="Añadir o Quitar Imágenes" 
+                colorClass="bg-purple-500" 
+                icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>} 
+                onClick={() => setActiveModal('gallery')} 
+              />
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-xl font-black text-text-main flex items-center gap-2">
+              <svg className="w-6 h-6 text-accent-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+              Atención al Cliente
+            </h2>
+            <div className="grid md:grid-cols-2 gap-4">
+              <AdminCard 
+                title="Contacto y Mapa" 
+                subtitle="Redes, Teléfono, Email, Ubicación" 
+                colorClass="bg-accent-orange" 
+                icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>} 
+                onClick={() => setActiveModal('contact')} 
+              />
+              <AdminCard 
+                title="Horarios" 
+                subtitle="Días y Horas de Disponibilidad" 
+                colorClass="bg-accent-green" 
+                icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>} 
+                onClick={() => setActiveModal('hours')} 
+              />
+            </div>
+          </div>
+
         </div>
 
         {activeModal === 'hero' && (
