@@ -378,8 +378,6 @@ export default function Admin() {
           <Modal title="Editar Especialista" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
             <div className="space-y-4">
               <Input label="Objetivo" value={data.about.objective} onChange={v => setData({...data, about: {...data.about, objective: v}})} />
-              <Input label="Público Objetivo" value={data.about.target} onChange={v => setData({...data, about: {...data.about, target: v}})} />
-              
               <div className="space-y-2">
                 <span className="text-xs font-black uppercase text-text-main ml-2">Imagen Principal (Opcional)</span>
                 <div className="relative w-full h-64 bg-gray-50 border-2 border-dashed border-gray-300 rounded-[2rem] flex flex-col items-center justify-center overflow-hidden hover:bg-gray-100 transition-colors group">
