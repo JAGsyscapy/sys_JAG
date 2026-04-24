@@ -359,8 +359,7 @@ export default function Admin() {
               <Input label="Título Principal (Línea 1)" value={data.hero.titleMain} onChange={v => setData({...data, hero: {...data.hero, titleMain: v}})} />
               <Input label="Título Resaltado (Línea 2)" value={data.hero.titleItalic} onChange={v => setData({...data, hero: {...data.hero, titleItalic: v}})} />
               <Input label="Nombre Profesional" value={data.hero.name} onChange={v => setData({...data, hero: {...data.hero, name: v}})} />
-              <Input label="Título de Subtítulo" value={data.hero.subtitle} onChange={v => setData({...data, hero: {...data.hero, subtitle: v}})} />
-              
+
               <div className="space-y-2">
                 <span className="text-xs font-black uppercase text-text-main ml-2">Texto descriptivo principal</span>
                 <textarea 
