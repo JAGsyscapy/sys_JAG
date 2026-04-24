@@ -77,9 +77,9 @@ export default function Home() {
       )}
 
       <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-xl z-50 border-b border-gray-200 shadow-sm">
-        <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <img src={siteLogo} alt="Logo" className="h-20 w-auto object-contain" />
+        <div className="max-w-6xl mx-auto px-6 h-28 flex items-center justify-between">
+          <div className="flex items-center gap-4 h-full py-2">
+            <img src={siteLogo} alt="Logo" className="h-full w-auto object-contain max-h-24" />
           </div>
           <div className="flex items-center gap-6">
             <Link to="/gracias" className="bg-whatsapp text-white px-6 py-3 rounded-xl font-black text-sm shadow-md hover:scale-105 transition-all">
@@ -89,7 +89,7 @@ export default function Home() {
         </div>
       </nav>
 
-      <section className="pt-40 pb-20 px-6">
+      <section className="pt-44 pb-20 px-6">
         <div className="max-w-4xl mx-auto text-center space-y-10">
           <h1 className="text-5xl md:text-7xl font-black text-text-main leading-[1.1] tracking-tight">
             {data.hero.titleMain} <br /> <span className="text-accent-green italic">{data.hero.titleItalic}</span>
@@ -188,27 +188,27 @@ export default function Home() {
         </section>
       )}
 
-      <footer id="contacto" className="bg-white text-text-main pt-16 pb-8 mt-20 border-t border-gray-200">
-        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-12">
+      <footer id="contacto" className="bg-white text-text-main pt-10 pb-6 mt-16 border-t border-gray-200">
+        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8">
           
-          <div className="flex flex-col items-center md:items-start space-y-4">
-            <img src={siteLogo} alt="Logo Footer" className="h-20 w-auto object-contain" />
-            <p className="text-sm leading-relaxed font-bold text-gray-600 text-center md:text-left max-w-xs">
-              Comprometidos con la salud mental de la comunidad de Querétaro a través de evidencia científica y calidez humana.
+          <div className="flex flex-col items-center md:items-start space-y-3">
+            <img src={siteLogo} alt="Logo Footer" className="h-16 w-auto object-contain" />
+            <p className="text-xs leading-relaxed font-bold text-gray-600 text-center md:text-left max-w-xs">
+              Comprometidos con la salud mental de la comunidad en Querétaro a través de evidencia científica y calidez humana.
             </p>
           </div>
           
-          <div className="space-y-6 flex flex-col items-center md:items-start">
-            <h4 className="text-sm font-black uppercase tracking-widest text-accent-orange">Contacto</h4>
-            <div className="space-y-4 font-bold text-sm text-gray-700 w-full flex flex-col items-center md:items-start">
+          <div className="space-y-4 flex flex-col items-center md:items-start">
+            <h4 className="text-xs font-black uppercase tracking-widest text-accent-orange">Contacto</h4>
+            <div className="space-y-3 font-bold text-xs text-gray-700 w-full flex flex-col items-center md:items-start">
               
               {data.contact.address && (
                 <a 
                   href="#ubicacion" 
                   className="flex items-center gap-3 group cursor-pointer"
                 >
-                  <div className="bg-accent-orange/10 p-2 rounded-full text-accent-orange group-hover:bg-accent-orange group-hover:text-white transition-colors">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  <div className="bg-accent-orange/10 p-1.5 rounded-full text-accent-orange group-hover:bg-accent-orange group-hover:text-white transition-colors">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                   </div>
                   <p className="group-hover:text-accent-orange transition-colors">{data.contact.address}</p>
                 </a>
@@ -220,8 +220,8 @@ export default function Home() {
                   onClick={(e) => handlePhoneClick(e, data.contact.displayPhone)} 
                   className="flex items-center gap-3 group cursor-pointer"
                 >
-                  <div className="bg-accent-green/10 p-2 rounded-full text-accent-green group-hover:bg-accent-green group-hover:text-white transition-colors">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  <div className="bg-accent-green/10 p-1.5 rounded-full text-accent-green group-hover:bg-accent-green group-hover:text-white transition-colors">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                   </div>
                   <p className="group-hover:text-accent-green transition-colors">{data.contact.displayPhone}</p>
                 </a>
@@ -233,31 +233,27 @@ export default function Home() {
                   onClick={(e) => handleEmailClick(e, data.contact.email)} 
                   className="flex items-center gap-3 group cursor-pointer"
                 >
-                  <div className="bg-blue-100 p-2 rounded-full text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                  <div className="bg-blue-100 p-1.5 rounded-full text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
                   </div>
                   <p className="group-hover:text-blue-500 transition-colors">{data.contact.email}</p>
                 </a>
               )}
             </div>
 
-            <div className="flex gap-4 pt-2">
-              {data.contact.facebook && (
-                <div className="bg-[#1877F2] p-2.5 rounded-full shadow-sm">
-                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V7.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                </div>
-              )}
-              {data.contact.instagram && (
-                <div className="bg-pink-600 p-2.5 rounded-full shadow-sm">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
-                </div>
-              )}
+            <div className="flex gap-3 pt-1">
+              <div className="bg-[#1877F2] p-2 rounded-full shadow-sm text-white">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V7.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </div>
+              <div className="bg-pink-600 p-2 rounded-full shadow-sm text-white">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+              </div>
             </div>
           </div>
 
-          <div className="space-y-6 flex flex-col items-center md:items-start">
-            <h4 className="text-sm font-black uppercase tracking-widest text-accent-orange">Disponibilidad</h4>
-            <ul className="space-y-2 text-sm font-bold text-gray-600 w-full max-w-[200px]">
+          <div className="space-y-4 flex flex-col items-center md:items-start">
+            <h4 className="text-xs font-black uppercase tracking-widest text-accent-orange">Disponibilidad</h4>
+            <ul className="space-y-1.5 text-xs font-bold text-gray-600 w-full max-w-[180px]">
               <li className="flex justify-between border-b border-gray-100 pb-1"><span>Lun</span> <span>{data.contact.monday}</span></li>
               <li className="flex justify-between border-b border-gray-100 pb-1"><span>Mar</span> <span>{data.contact.tuesday}</span></li>
               <li className="flex justify-between border-b border-gray-100 pb-1"><span>Mié</span> <span>{data.contact.wednesday}</span></li>
@@ -269,12 +265,12 @@ export default function Home() {
           </div>
         </div>
         
-        <div className="max-w-6xl mx-auto px-6 mt-16 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between gap-6 items-center">
-          <p className="text-xs font-black uppercase tracking-widest text-gray-400">© 2026 {data.hero.name}</p>
-          <div className="flex flex-wrap justify-center md:justify-end gap-6 mt-4 md:mt-0">
-            <Link to="/privacidad" className="text-xs font-bold text-gray-500 hover:text-accent-green transition-colors">Privacidad</Link>
-            <Link to="/terminos" className="text-xs font-bold text-gray-500 hover:text-accent-green transition-colors">Términos</Link>
-            <Link to="/admin" className="text-xs font-black uppercase tracking-widest text-accent-orange hover:text-accent-green transition-colors ml-2">
+        <div className="max-w-6xl mx-auto px-6 mt-10 pt-6 border-t border-gray-200 flex flex-col md:flex-row justify-between gap-4 items-center">
+          <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">© 2026 {data.hero.name}</p>
+          <div className="flex flex-wrap justify-center md:justify-end gap-5 mt-2 md:mt-0">
+            <Link to="/privacidad" className="text-[10px] font-bold text-gray-500 hover:text-accent-green transition-colors">Privacidad</Link>
+            <Link to="/terminos" className="text-[10px] font-bold text-gray-500 hover:text-accent-green transition-colors">Términos</Link>
+            <Link to="/admin" className="text-[10px] font-black uppercase tracking-widest text-accent-orange hover:text-accent-green transition-colors ml-2">
               Acceso Sistema
             </Link>
           </div>
@@ -321,6 +317,15 @@ export default function Home() {
             <p className="text-xs font-bold text-text-main">{data.contact.email}</p>
           </a>
         )}
+
+        <div className="flex gap-2 pointer-events-auto" style={{ animationDelay: '300ms' }}>
+          <div className="bg-[#1877F2] p-2 rounded-full shadow-lg text-white">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V7.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </div>
+          <div className="bg-pink-600 p-2 rounded-full shadow-lg text-white" style={{ animationDelay: '400ms' }}>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+          </div>
+        </div>
       </div>
 
       <Link

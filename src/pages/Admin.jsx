@@ -68,8 +68,6 @@ export default function Admin() {
         .then(resData => {
           if (!resData.gallery) resData.gallery = [];
           if (!resData.contact.email) resData.contact.email = '';
-          if (!resData.contact.instagram) resData.contact.instagram = '';
-          if (!resData.contact.facebook) resData.contact.facebook = '';
           if (!resData.contact.mapUrl) resData.contact.mapUrl = '';
           setData(resData);
         })
@@ -326,7 +324,7 @@ export default function Admin() {
             <div className="grid md:grid-cols-2 gap-4">
               <AdminCard 
                 title="Contacto y Mapa" 
-                subtitle="Redes, Teléfono, Email, Ubicación" 
+                subtitle="Teléfono, Email, Ubicación" 
                 colorClass="bg-accent-orange" 
                 icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>} 
                 onClick={() => setActiveModal('contact')} 
@@ -450,8 +448,6 @@ export default function Admin() {
               <Input label="Teléfono Visible" value={data.contact.displayPhone} onChange={v => setData({...data, contact: {...data.contact, displayPhone: v}})} />
               <Input label="Dirección Completa" value={data.contact.address} onChange={v => setData({...data, contact: {...data.contact, address: v}})} />
               <Input label="Correo Electrónico" value={data.contact.email} onChange={v => setData({...data, contact: {...data.contact, email: v}})} />
-              <Input label="Instagram (URL o usuario sin @)" value={data.contact.instagram} onChange={v => setData({...data, contact: {...data.contact, instagram: v}})} />
-              <Input label="Facebook (URL completa)" value={data.contact.facebook} onChange={v => setData({...data, contact: {...data.contact, facebook: v}})} />
               <div className="space-y-2">
                 <span className="text-xs font-black uppercase text-text-main ml-2">Mapa (Pega el código iframe de Google Maps aquí)</span>
                 <p className="text-xs text-gray-500 ml-2 mb-2">Simplemente pega el código que te da Google Maps al "Compartir > Incorporar un mapa". El sistema se encargará del resto.</p>
