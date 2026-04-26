@@ -57,6 +57,17 @@ const deleteCloudinaryImage = async (url) => {
   } catch (e) {}
 };
 
+// Función de seguridad para procesar el JSON legal y evitar el Error 500
+const parseSafeLegal = (dbData, fallbackData) => {
+  if (!dbData) return fallbackData;
+  try {
+    return JSON.parse(dbData);
+  } catch (e) {
+    // Si falla el parseo, significa que hay texto plano antiguo. Lo convertimos a la nueva estructura.
+    return { intro: dbData, sections: [] };
+  }
+};
+
 export default async function handler(req, res) {
   try {
     await pool.query('ALTER TABLE professional ADD COLUMN IF NOT EXISTS about_title TEXT');
@@ -124,13 +135,14 @@ export default async function handler(req, res) {
         },
         gallery: gallery,
         legal: {
-          privacidad: prof.privacidad ? JSON.parse(prof.privacidad) : defaultPrivacidad,
-          terminos: prof.terminos ? JSON.parse(prof.terminos) : defaultTerminos
+          privacidad: parseSafeLegal(prof.privacidad, defaultPrivacidad),
+          terminos: parseSafeLegal(prof.terminos, defaultTerminos)
         }
       };
 
       return res.status(200).json(responseData);
     } catch (error) {
+      console.error(error); // Imprimir el error exacto en los logs del servidor
       return res.status(500).json({ error: 'Database error' });
     }
   }
