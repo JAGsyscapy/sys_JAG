@@ -134,12 +134,12 @@ export default function Home() {
       </section>
 
       <section className="max-w-6xl mx-auto px-6 py-12">
-        <div className="bg-white rounded-[3rem] p-10 md:p-20 shadow-xl grid md:grid-cols-2 gap-16 items-stretch border border-gray-100">
-          <div className="flex flex-col justify-between space-y-10 h-full">
+        <div className="bg-white rounded-[3rem] p-10 md:p-20 shadow-xl grid md:grid-cols-2 gap-16 items-center border border-gray-100">
+          <div className="flex flex-col space-y-10">
             <h3 className="text-4xl font-black text-text-main tracking-tight leading-none">
               {data.about.title} <br /> <span className="text-accent-orange">{data.about.titleHighlight}</span>
             </h3>
-            <div className="space-y-8 flex-1">
+            <div className="space-y-8">
               <div>
                 <h4 className="text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Objetivo</h4>
                 <p className="text-xl font-bold text-text-main">{data.about.objective}</p>
@@ -147,10 +147,10 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="w-full bg-bg-main rounded-[2.5rem] shadow-inner border border-gray-200 flex flex-col items-center justify-center p-6 h-full">
+          <div className="w-full max-w-sm mx-auto bg-bg-main rounded-[2.5rem] shadow-inner border border-gray-200 flex flex-col items-center justify-center p-8">
             {data.hero.image && (
-              <div className="flex-1 w-full flex items-center justify-center">
-                <img src={data.hero.image} alt="Consultorio" className="w-full h-full max-h-[400px] object-contain rounded-2xl" />
+              <div className="w-full flex items-center justify-center">
+                <img src={data.hero.image} alt="Consultorio" className="max-w-[240px] max-h-[240px] w-full h-auto object-contain rounded-xl" />
               </div>
             )}
             <p className="text-2xl font-black text-text-main mt-6 tracking-widest text-center">{data.about.caption}</p>
