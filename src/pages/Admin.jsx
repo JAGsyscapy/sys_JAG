@@ -272,7 +272,7 @@ export default function Admin() {
             <img src={data.hero.logo || defaultLogo} alt="Logo Admin" className="h-16 w-auto object-contain hidden md:block" />
             <div className="text-center md:text-left">
               <h1 className="text-3xl md:text-4xl font-black text-text-main tracking-tight">Dashboard Administrativo</h1>
-              <p className="text-xs font-black text-gray-500 uppercase tracking-widest mt-1">Gestor de sitio web fácil y rápido</p>
+              <p className="text-xs font-black text-gray-500 uppercase tracking-widest mt-1"></p>
             </div>
           </div>
           <button onClick={() => {localStorage.removeItem('token'); setToken(null); navigate('/')}} className="bg-red-50 text-red-600 px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-red-100 transition-colors border border-red-200">
