@@ -6,21 +6,26 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
+const defaultColors = {
+  bgMain: '#E6EED6',
+  textMain: '#4A3525',
+  whatsapp: '#4CAF50',
+  accentOrange: '#D96C42',
+  accentYellow: '#E8B830',
+  accentGreen: '#7AB539'
+};
+
 const deleteCloudinaryImage = async (url) => {
   try {
     const parts = url.split('/upload/');
     if (parts.length < 2) return;
     const fileWithExt = parts[1].split('/').slice(1).join('/');
     const publicId = fileWithExt.substring(0, fileWithExt.lastIndexOf('.'));
-    
     const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
     const apiKey = process.env.CLOUDINARY_API_KEY;
     const apiSecret = process.env.CLOUDINARY_API_SECRET;
-    
     if (!cloudName || !apiKey || !apiSecret) return;
-
     const auth = Buffer.from(apiKey + ':' + apiSecret).toString('base64');
-    
     await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/resources/image/upload`, {
       method: 'DELETE',
       headers: {
@@ -33,6 +38,15 @@ const deleteCloudinaryImage = async (url) => {
 };
 
 export default async function handler(req, res) {
+  try {
+    await pool.query('ALTER TABLE professional ADD COLUMN IF NOT EXISTS about_title TEXT');
+    await pool.query('ALTER TABLE professional ADD COLUMN IF NOT EXISTS about_title_highlight TEXT');
+    await pool.query('ALTER TABLE professional ADD COLUMN IF NOT EXISTS about_subtitle TEXT');
+    await pool.query('ALTER TABLE professional ADD COLUMN IF NOT EXISTS about_caption TEXT');
+    await pool.query('ALTER TABLE professional ADD COLUMN IF NOT EXISTS acompanamiento TEXT');
+    await pool.query('ALTER TABLE professional ADD COLUMN IF NOT EXISTS site_colors TEXT');
+  } catch(e) {}
+
   if (req.method === 'GET') {
     try {
       const profRes = await pool.query('SELECT * FROM professional WHERE id = 1');
@@ -62,9 +76,15 @@ export default async function handler(req, res) {
           education: prof.education,
           approach: prof.approach,
           objective: prof.objective,
-          target: prof.target
+          target: prof.target,
+          title: prof.about_title || 'Atención profesional',
+          titleHighlight: prof.about_title_highlight || 'con enfoque humano.',
+          subtitle: prof.about_subtitle || 'Sesiones virtuales y presencial',
+          caption: prof.about_caption || 'UNAM'
         },
         services: services,
+        acompanamiento: prof.acompanamiento ? JSON.parse(prof.acompanamiento) : ['Adolescentes', 'Adultos', 'Parejas'],
+        colors: prof.site_colors ? JSON.parse(prof.site_colors) : defaultColors,
         contact: {
           displayPhone: contact.display_phone,
           address: contact.address,
@@ -107,12 +127,14 @@ export default async function handler(req, res) {
           UPDATE professional SET
           name = $1, subtitle = $2, therapy = $3, phone = $4, image = $5,
           education = $6, approach = $7, objective = $8, target = $9, logo = $10,
-          title_main = $11, title_italic = $12
+          title_main = $11, title_italic = $12, about_title = $13, about_title_highlight = $14,
+          about_subtitle = $15, about_caption = $16, acompanamiento = $17, site_colors = $18
           WHERE id = 1
         `, [
           newData.hero.name, newData.hero.subtitle, newData.hero.therapy, newData.hero.phone, newData.hero.image,
           newData.about.education, newData.about.approach, newData.about.objective, newData.about.target, newData.hero.logo,
-          newData.hero.titleMain, newData.hero.titleItalic
+          newData.hero.titleMain, newData.hero.titleItalic, newData.about.title, newData.about.titleHighlight,
+          newData.about.subtitle, newData.about.caption, JSON.stringify(newData.acompanamiento), JSON.stringify(newData.colors)
         ]);
 
         await client.query('DELETE FROM service WHERE professional_id = 1');

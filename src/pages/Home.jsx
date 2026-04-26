@@ -65,9 +65,37 @@ export default function Home() {
   }
 
   const siteLogo = data.hero.logo || defaultLogo;
+  const colors = data.colors || {};
+  
+  const cssVars = `
+    :root {
+      --color-bg-main: ${colors.bgMain || '#E6EED6'};
+      --color-text-main: ${colors.textMain || '#4A3525'};
+      --color-whatsapp: ${colors.whatsapp || '#4CAF50'};
+      --color-accent-orange: ${colors.accentOrange || '#D96C42'};
+      --color-accent-yellow: ${colors.accentYellow || '#E8B830'};
+      --color-accent-green: ${colors.accentGreen || '#7AB539'};
+    }
+    .bg-bg-main { background-color: var(--color-bg-main) !important; }
+    .text-text-main { color: var(--color-text-main) !important; }
+    .bg-text-main { background-color: var(--color-text-main) !important; }
+    .text-whatsapp { color: var(--color-whatsapp) !important; }
+    .bg-whatsapp { background-color: var(--color-whatsapp) !important; }
+    .text-accent-orange { color: var(--color-accent-orange) !important; }
+    .bg-accent-orange { background-color: var(--color-accent-orange) !important; }
+    .border-accent-orange { border-color: var(--color-accent-orange) !important; }
+    .text-accent-yellow { color: var(--color-accent-yellow) !important; }
+    .bg-accent-yellow { background-color: var(--color-accent-yellow) !important; }
+    .border-accent-yellow { border-color: var(--color-accent-yellow) !important; }
+    .text-accent-green { color: var(--color-accent-green) !important; }
+    .bg-accent-green { background-color: var(--color-accent-green) !important; }
+    .border-accent-green { border-color: var(--color-accent-green) !important; }
+    .ring-accent-green { --tw-ring-color: var(--color-accent-green) !important; }
+  `;
 
   return (
     <div className="min-h-screen bg-bg-main text-text-main font-sans selection:bg-accent-yellow selection:text-text-main relative">
+      <style>{cssVars}</style>
       
       {toast && (
         <div className="fixed top-10 left-1/2 -translate-x-1/2 z-[300] bg-text-main text-white px-6 py-4 rounded-full shadow-2xl font-black text-sm uppercase tracking-widest flex items-center gap-3 animate-in slide-in-from-top-10 fade-in duration-300">
@@ -95,7 +123,7 @@ export default function Home() {
             {data.hero.titleMain} <br /> <span className="text-accent-green italic">{data.hero.titleItalic}</span>
           </h1>
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="#servicios" className="inline-block bg-accent-yellow border border-accent-yellow text-text-main font-black uppercase text-sm tracking-widest px-8 py-4 rounded-full shadow-sm hover:bg-[#d4a625] hover:border-[#d4a625] transition-colors w-full sm:w-auto text-center">
+            <a href="#servicios" className="inline-block bg-accent-yellow border border-accent-yellow text-text-main font-black uppercase text-sm tracking-widest px-8 py-4 rounded-full shadow-sm hover:scale-105 transition-all w-full sm:w-auto text-center">
               Explorar Servicios ↓
             </a>
           </div>
@@ -106,25 +134,47 @@ export default function Home() {
       </section>
 
       <section className="max-w-6xl mx-auto px-6 py-12">
-        <div className="bg-white rounded-[3rem] p-10 md:p-20 shadow-xl grid md:grid-cols-2 gap-16 items-center border border-gray-100">
-          <div className="space-y-10">
+        <div className="bg-white rounded-[3rem] p-10 md:p-20 shadow-xl grid md:grid-cols-2 gap-16 items-stretch border border-gray-100">
+          <div className="flex flex-col justify-between space-y-10 h-full">
             <h3 className="text-4xl font-black text-text-main tracking-tight leading-none">
-              Atención profesional <br /> <span className="text-accent-orange">con enfoque humano.</span>
+              {data.about.title} <br /> <span className="text-accent-orange">{data.about.titleHighlight}</span>
             </h3>
-            <div className="space-y-8">
+            <div className="space-y-8 flex-1">
               <div>
                 <h4 className="text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Objetivo</h4>
                 <p className="text-xl font-bold text-text-main">{data.about.objective}</p>
-                <p className="text-lg font-bold text-accent-green mt-4">Sesiones virtuales y presencial</p>
+                <p className="text-lg font-bold text-accent-green mt-4">{data.about.subtitle}</p>
               </div>
             </div>
           </div>
-          <div className="w-full bg-bg-main rounded-[2.5rem] shadow-inner border border-gray-200 flex flex-col items-center justify-center p-6">
-            {data.hero.image && <img src={data.hero.image} alt="Consultorio" className="w-full max-h-[500px] object-contain rounded-2xl" />}
-            <p className="text-2xl font-black text-text-main mt-6 tracking-widest text-center">UNAM</p>
+          <div className="w-full bg-bg-main rounded-[2.5rem] shadow-inner border border-gray-200 flex flex-col items-center justify-center p-6 h-full">
+            {data.hero.image && (
+              <div className="flex-1 w-full flex items-center justify-center">
+                <img src={data.hero.image} alt="Consultorio" className="w-full h-full max-h-[400px] object-contain rounded-2xl" />
+              </div>
+            )}
+            <p className="text-2xl font-black text-text-main mt-6 tracking-widest text-center">{data.about.caption}</p>
           </div>
         </div>
       </section>
+
+      {data.acompanamiento && data.acompanamiento.length > 0 && (
+        <section id="acompanamiento" className="max-w-6xl mx-auto px-6 pt-20 space-y-16 scroll-mt-24">
+          <div className="text-center space-y-3">
+            <h3 className="text-4xl font-black text-text-main">Acompañamiento a:</h3>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {data.acompanamiento.map((a, i) => (
+              <div key={i} className="bg-white p-6 rounded-[1.5rem] border border-gray-100 shadow-md hover:shadow-xl hover:border-accent-orange/30 hover:-translate-y-1 transition-all">
+                <div className="w-10 h-10 bg-accent-orange text-white rounded-xl mb-4 flex items-center justify-center font-black text-lg shadow-inner">
+                  ✓
+                </div>
+                <p className="font-black text-lg text-text-main leading-tight">{a}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section id="servicios" className="max-w-6xl mx-auto px-6 py-20 space-y-16 scroll-mt-24">
         <div className="text-center space-y-3">

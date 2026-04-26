@@ -2,6 +2,15 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import defaultLogo from '../assets/logopsichort.jpeg';
 
+const defaultColors = {
+  bgMain: '#E6EED6',
+  textMain: '#4A3525',
+  whatsapp: '#4CAF50',
+  accentOrange: '#D96C42',
+  accentYellow: '#E8B830',
+  accentGreen: '#7AB539'
+};
+
 const Modal = ({ title, onClose, onSave, saving, children }) => (
   <div className="fixed inset-0 bg-text-main/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
     <div className="bg-white w-full max-w-4xl rounded-[2rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
@@ -34,11 +43,12 @@ const AdminCard = ({ title, subtitle, icon, colorClass, onClick }) => (
   </button>
 );
 
-const Input = ({ label, value, onChange, placeholder }) => (
+const Input = ({ label, value, onChange, placeholder, type = "text" }) => (
   <div className="space-y-2">
     <span className="text-xs font-black uppercase text-text-main ml-2">{label}</span>
     <input 
-      className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-text-main" 
+      type={type}
+      className={`w-full bg-white border border-gray-300 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-text-main ${type === 'color' ? 'h-14 p-1 cursor-pointer' : 'p-4'}`} 
       value={value} 
       onChange={e => onChange(e.target.value)}
       placeholder={placeholder}
@@ -69,6 +79,8 @@ export default function Admin() {
           if (!resData.gallery) resData.gallery = [];
           if (!resData.contact.email) resData.contact.email = '';
           if (!resData.contact.mapUrl) resData.contact.mapUrl = '';
+          if (!resData.acompanamiento) resData.acompanamiento = [];
+          if (!resData.colors) resData.colors = defaultColors;
           setData(resData);
         })
         .catch(() => {
@@ -217,7 +229,7 @@ export default function Admin() {
 
   if (!token) {
     return (
-      <div className="min-h-screen bg-bg-main flex items-center justify-center p-6 font-sans">
+      <div className="min-h-screen flex items-center justify-center p-6 font-sans bg-gray-100">
         <form onSubmit={handleLogin} className="bg-white p-12 rounded-[3rem] shadow-xl max-w-md w-full space-y-8 border border-gray-200">
           <div className="flex flex-col items-center justify-center space-y-4">
             <img src={defaultLogo} alt="Logo" className="h-20 w-auto object-contain" />
@@ -248,7 +260,7 @@ export default function Admin() {
       {toast && (
         <div className={`fixed top-10 left-1/2 -translate-x-1/2 z-[300] px-6 py-4 rounded-full shadow-2xl font-black text-sm uppercase tracking-widest flex items-center gap-3 animate-in slide-in-from-top-10 fade-in duration-300 ${toast.type === 'error' ? 'bg-red-500 text-white' : 'bg-text-main text-white'}`}>
           {toast.type === 'success' && <svg className="w-5 h-5 text-accent-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>}
-          {toast.type === 'info' && <svg className="w-5 h-5 text-accent-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+          {toast.type === 'info' && <svg className="w-5 h-5 text-accent-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
           {toast.type === 'error' && <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
           {toast.message}
         </div>
@@ -275,17 +287,24 @@ export default function Admin() {
               <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
               Identidad y Diseño Principal
             </h2>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-3 gap-4">
               <AdminCard 
-                title="Cabecera y Textos" 
-                subtitle="Logo, Nombre y Mensaje Principal" 
+                title="Cabecera" 
+                subtitle="Logo, Nombre y Mensajes" 
                 colorClass="bg-blue-500" 
                 icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>} 
                 onClick={() => setActiveModal('hero')} 
               />
               <AdminCard 
+                title="Colores del Sitio" 
+                subtitle="Personalizar la paleta" 
+                colorClass="bg-yellow-500" 
+                icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>} 
+                onClick={() => setActiveModal('colors')} 
+              />
+              <AdminCard 
                 title="Sobre Mí" 
-                subtitle="Objetivo y Foto Principal" 
+                subtitle="Detalles e Imagen central" 
                 colorClass="bg-indigo-500" 
                 icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>} 
                 onClick={() => setActiveModal('about')} 
@@ -298,17 +317,24 @@ export default function Admin() {
               <svg className="w-6 h-6 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
               Servicios y Contenido
             </h2>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-3 gap-4">
+              <AdminCard 
+                title="Acompañamiento" 
+                subtitle="Tipos de Atención" 
+                colorClass="bg-orange-500" 
+                icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>} 
+                onClick={() => setActiveModal('acompanamiento')} 
+              />
               <AdminCard 
                 title="Especialidades" 
-                subtitle="Lista de Servicios Ofrecidos" 
+                subtitle="Servicios Ofrecidos" 
                 colorClass="bg-pink-500" 
                 icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>} 
                 onClick={() => setActiveModal('services')} 
               />
               <AdminCard 
-                title="Galería de Fotos" 
-                subtitle="Añadir o Quitar Imágenes" 
+                title="Galería" 
+                subtitle="Añadir/Quitar Imágenes" 
                 colorClass="bg-purple-500" 
                 icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>} 
                 onClick={() => setActiveModal('gallery')} 
@@ -344,7 +370,6 @@ export default function Admin() {
         {activeModal === 'hero' && (
           <Modal title="Editar Inicio" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
             <div className="space-y-6">
-              
               <div className="space-y-2">
                 <span className="text-xs font-black uppercase text-text-main ml-2">Logo Principal del Sitio</span>
                 <div className="relative w-full h-40 bg-gray-50 border-2 border-dashed border-gray-300 rounded-[2rem] flex flex-col items-center justify-center overflow-hidden hover:bg-gray-100 transition-colors group">
@@ -355,21 +380,42 @@ export default function Admin() {
                   <input type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" onChange={e => setLogoFile(e.target.files[0])} />
                 </div>
               </div>
-
               <Input label="Título Principal (Línea 1)" value={data.hero.titleMain} onChange={v => setData({...data, hero: {...data.hero, titleMain: v}})} />
               <Input label="Título Resaltado (Línea 2)" value={data.hero.titleItalic} onChange={v => setData({...data, hero: {...data.hero, titleItalic: v}})} />
               <Input label="Nombre Profesional" value={data.hero.name} onChange={v => setData({...data, hero: {...data.hero, name: v}})} />
-
               <div className="space-y-2">
                 <span className="text-xs font-black uppercase text-text-main ml-2">Texto descriptivo principal</span>
                 <textarea 
                   className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-text-main min-h-[100px]" 
                   value={data.hero.therapy} 
                   onChange={e => setData({...data, hero: {...data.hero, therapy: e.target.value}})}
-                  placeholder="Nosotros ofrecemos un servicio a un nivel particular, cada paciente es especial y cada paciente merece toda nuestra atención!"
+                  placeholder="Nosotros ofrecemos un servicio a un nivel particular..."
                 />
               </div>
+            </div>
+          </Modal>
+        )}
 
+        {activeModal === 'colors' && (
+          <Modal title="Colores del Sitio" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
+            <div className="space-y-6">
+              <p className="text-xs font-bold text-gray-500 bg-gray-100 p-4 rounded-xl">
+                Personaliza la apariencia. Estos colores formarán la identidad visual en todos los botones y secciones. Siempre podrás regresar a los originales.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Input type="color" label="Fondo Principal" value={data.colors.bgMain} onChange={v => setData({...data, colors: {...data.colors, bgMain: v}})} />
+                <Input type="color" label="Texto Principal" value={data.colors.textMain} onChange={v => setData({...data, colors: {...data.colors, textMain: v}})} />
+                <Input type="color" label="Acento Verde" value={data.colors.accentGreen} onChange={v => setData({...data, colors: {...data.colors, accentGreen: v}})} />
+                <Input type="color" label="Acento Naranja" value={data.colors.accentOrange} onChange={v => setData({...data, colors: {...data.colors, accentOrange: v}})} />
+                <Input type="color" label="Acento Amarillo" value={data.colors.accentYellow} onChange={v => setData({...data, colors: {...data.colors, accentYellow: v}})} />
+                <Input type="color" label="Color Botón WhatsApp" value={data.colors.whatsapp} onChange={v => setData({...data, colors: {...data.colors, whatsapp: v}})} />
+              </div>
+              <button 
+                onClick={() => setData({...data, colors: defaultColors})}
+                className="w-full bg-gray-200 text-gray-700 py-4 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-gray-300 transition-colors mt-4"
+              >
+                Restaurar Colores Originales
+              </button>
             </div>
           </Modal>
         )}
@@ -377,13 +423,18 @@ export default function Admin() {
         {activeModal === 'about' && (
           <Modal title="Editar Especialista" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
             <div className="space-y-4">
-              <Input label="Objetivo" value={data.about.objective} onChange={v => setData({...data, about: {...data.about, objective: v}})} />
-              <div className="space-y-2">
+              <Input label="Título de Sección (Línea 1)" value={data.about.title} onChange={v => setData({...data, about: {...data.about, title: v}})} />
+              <Input label="Título de Sección Resaltado" value={data.about.titleHighlight} onChange={v => setData({...data, about: {...data.about, titleHighlight: v}})} />
+              <Input label="Objetivo / Descripción corta" value={data.about.objective} onChange={v => setData({...data, about: {...data.about, objective: v}})} />
+              <Input label="Subtítulo Inferior" value={data.about.subtitle} onChange={v => setData({...data, about: {...data.about, subtitle: v}})} />
+              <Input label="Texto debajo de la imagen (Ej. UNAM)" value={data.about.caption} onChange={v => setData({...data, about: {...data.about, caption: v}})} />
+              
+              <div className="space-y-2 pt-4">
                 <span className="text-xs font-black uppercase text-text-main ml-2">Imagen Principal (Opcional)</span>
-                <div className="relative w-full h-64 bg-gray-50 border-2 border-dashed border-gray-300 rounded-[2rem] flex flex-col items-center justify-center overflow-hidden hover:bg-gray-100 transition-colors group">
+                <div className="relative w-full h-48 bg-gray-50 border-2 border-dashed border-gray-300 rounded-[2rem] flex flex-col items-center justify-center overflow-hidden hover:bg-gray-100 transition-colors group">
                   {(imageFile || data.hero.image) ? (
                     <>
-                      <img src={imageFile ? URL.createObjectURL(imageFile) : data.hero.image} className="w-full h-full object-cover group-hover:opacity-40 transition-opacity" />
+                      <img src={imageFile ? URL.createObjectURL(imageFile) : data.hero.image} className="w-full h-full object-contain group-hover:opacity-40 transition-opacity p-2" />
                       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                         <span className="bg-text-main text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl">Reemplazar Imagen</span>
                       </div>
@@ -397,6 +448,43 @@ export default function Admin() {
                   <input type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" onChange={e => setImageFile(e.target.files[0])} />
                 </div>
               </div>
+            </div>
+          </Modal>
+        )}
+
+        {activeModal === 'acompanamiento' && (
+          <Modal title="Editar Acompañamiento" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
+            <div className="space-y-4">
+              <p className="text-xs font-black uppercase text-gray-500 mb-4">Añade o elimina los tipos de pacientes / enfoques</p>
+              {data.acompanamiento.map((a, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <input 
+                    className="flex-1 bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-text-main" 
+                    value={a} 
+                    onChange={e => {
+                      const newAcc = [...data.acompanamiento];
+                      newAcc[i] = e.target.value;
+                      setData({...data, acompanamiento: newAcc});
+                    }} 
+                  />
+                  <button 
+                    onClick={() => {
+                      const newAcc = data.acompanamiento.filter((_, index) => index !== i);
+                      setData({...data, acompanamiento: newAcc});
+                      showToast('Opción eliminada', 'info');
+                    }}
+                    className="bg-red-50 border border-red-200 text-red-600 w-14 h-14 flex items-center justify-center rounded-xl font-black text-xl hover:bg-red-100 transition-colors shrink-0"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              <button 
+                onClick={() => setData({...data, acompanamiento: [...data.acompanamiento, 'Nuevo Enfoque']})}
+                className="w-full bg-accent-orange/10 border border-accent-orange/20 text-accent-orange py-4 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-accent-orange hover:text-white transition-colors mt-4"
+              >
+                + Añadir Acompañamiento
+              </button>
             </div>
           </Modal>
         )}
