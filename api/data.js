@@ -15,6 +15,26 @@ const defaultColors = {
   accentGreen: '#7AB539'
 };
 
+const defaultPrivacidad = {
+  intro: "De conformidad con lo establecido en la Ley Federal de Protección de Datos Personales en Posesión de los Particulares, se pone a disposición el presente Aviso de Privacidad.",
+  sections: [
+    { title: "1. Identidad y domicilio del responsable", text: "El Centro de Atención Psicológica y Pedagógica de Querétaro, con domicilio en Querétaro, México, es responsable del uso y protección de sus datos personales." },
+    { title: "2. Datos personales que se recaban", text: "Para llevar a cabo las finalidades descritas en este aviso, utilizaremos datos de identificación, contacto y, en su caso, datos sensibles relativos a su estado de salud mental, los cuales serán tratados con estricta confidencialidad." },
+    { title: "3. Finalidades del tratamiento de datos", text: "Los datos personales que recabamos serán utilizados para proveer los servicios de atención psicológica solicitados, conformar su expediente clínico y contactarle para seguimiento de citas." },
+    { title: "4. Medios para ejercer derechos ARCO", text: "Usted tiene derecho a conocer qué datos personales tenemos de usted, para qué los utilizamos y las condiciones del uso que les damos (Acceso). Asimismo, es su derecho solicitar la corrección de su información personal en caso de que esté desactualizada, sea inexacta o incompleta (Rectificación); que la eliminemos de nuestros registros o bases de datos cuando considere que la misma no está siendo utilizada conforme a los principios, deberes y obligaciones previstas en la normativa (Cancelación); así como oponerse al uso de sus datos personales para fines específicos (Oposición). Estos derechos se conocen como derechos ARCO." }
+  ]
+};
+
+const defaultTerminos = {
+  intro: "El acceso y uso de este sitio web y los servicios ofrecidos por el Centro de Atención Psicológica y Pedagógica de Querétaro están sujetos a los siguientes términos y condiciones.",
+  sections: [
+    { title: "1. Servicios", text: "Se ofrecen servicios de terapia psicológica presencial en Querétaro. La agenda de citas está sujeta a disponibilidad." },
+    { title: "2. Cancelaciones y Reprogramaciones", text: "Toda cancelación o reprogramación de cita debe realizarse con al menos 24 horas de anticipación. De lo contrario, podrá generar el cobro total o parcial de la sesión programada." },
+    { title: "3. Confidencialidad", text: "Toda la información compartida durante las sesiones es estrictamente confidencial y se rige bajo el secreto profesional y nuestro Aviso de Privacidad." },
+    { title: "4. Pagos", text: "Los pagos deben realizarse previo a la sesión o al finalizar la misma, mediante los métodos de pago aceptados en el consultorio. Las tarifas promocionales están sujetas a cambios sin previo aviso." }
+  ]
+};
+
 const deleteCloudinaryImage = async (url) => {
   try {
     const parts = url.split('/upload/');
@@ -104,8 +124,8 @@ export default async function handler(req, res) {
         },
         gallery: gallery,
         legal: {
-          privacidad: prof.privacidad || '',
-          terminos: prof.terminos || ''
+          privacidad: prof.privacidad ? JSON.parse(prof.privacidad) : defaultPrivacidad,
+          terminos: prof.terminos ? JSON.parse(prof.terminos) : defaultTerminos
         }
       };
 
@@ -142,7 +162,7 @@ export default async function handler(req, res) {
           newData.about.education, newData.about.approach, newData.about.objective, newData.about.target, newData.hero.logo,
           newData.hero.titleMain, newData.hero.titleItalic, newData.about.title, newData.about.titleHighlight,
           newData.about.subtitle, newData.about.caption, JSON.stringify(newData.acompanamiento), JSON.stringify(newData.colors),
-          newData.legal.privacidad, newData.legal.terminos
+          JSON.stringify(newData.legal.privacidad), JSON.stringify(newData.legal.terminos)
         ]);
 
         await client.query('DELETE FROM service WHERE professional_id = 1');

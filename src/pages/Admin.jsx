@@ -81,7 +81,10 @@ export default function Admin() {
           if (!resData.contact.mapUrl) resData.contact.mapUrl = '';
           if (!resData.acompanamiento) resData.acompanamiento = [];
           if (!resData.colors) resData.colors = defaultColors;
-          if (!resData.legal) resData.legal = { privacidad: '', terminos: '' };
+          if (!resData.legal) resData.legal = { 
+            privacidad: { intro: '', sections: [] }, 
+            terminos: { intro: '', sections: [] } 
+          };
           setData(resData);
         })
         .catch(() => {
@@ -218,6 +221,42 @@ export default function Admin() {
     const newGallery = data.gallery.filter((_, i) => i !== index);
     setData({ ...data, gallery: newGallery });
     showToast('Imagen eliminada', 'info');
+  };
+
+  const updateLegalSection = (type, index, field, value) => {
+    const newSections = [...data.legal[type].sections];
+    newSections[index][field] = value;
+    setData({
+      ...data,
+      legal: {
+        ...data.legal,
+        [type]: { ...data.legal[type], sections: newSections }
+      }
+    });
+  };
+
+  const addLegalSection = (type) => {
+    setData({
+      ...data,
+      legal: {
+        ...data.legal,
+        [type]: {
+          ...data.legal[type],
+          sections: [...data.legal[type].sections, { title: '', text: '' }]
+        }
+      }
+    });
+  };
+
+  const removeLegalSection = (type, index) => {
+    const newSections = data.legal[type].sections.filter((_, i) => i !== index);
+    setData({
+      ...data,
+      legal: {
+        ...data.legal,
+        [type]: { ...data.legal[type], sections: newSections }
+      }
+    });
   };
 
   const handleCloseModal = () => {
@@ -532,7 +571,7 @@ export default function Admin() {
                     onClick={() => {
                       const newServices = data.services.filter((_, index) => index !== i);
                       setData({...data, services: newServices});
-                      showToast('Servicio eliminado', 'info');
+                      showToast('Servicio eliminada', 'info');
                     }}
                     className="bg-red-50 border border-red-200 text-red-600 w-14 h-14 flex items-center justify-center rounded-xl font-black text-xl hover:bg-red-100 transition-colors shrink-0"
                   >
@@ -644,28 +683,82 @@ export default function Admin() {
 
         {activeModal === 'privacidad' && (
           <Modal title="Editar Aviso de Privacidad" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
-            <div className="space-y-4">
-              <span className="text-xs font-black uppercase text-text-main ml-2">Contenido de Privacidad</span>
-              <textarea 
-                className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-medium text-text-main min-h-[300px]" 
-                value={data.legal.privacidad} 
-                onChange={e => setData({...data, legal: {...data.legal, privacidad: e.target.value}})}
-                placeholder="Escribe aquí tu aviso de privacidad..."
-              />
+            <div className="space-y-8">
+              <div className="space-y-2">
+                <span className="text-xs font-black uppercase text-text-main ml-2">Párrafo Introductorio</span>
+                <textarea 
+                  className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-medium text-text-main h-24" 
+                  value={data.legal.privacidad.intro} 
+                  onChange={e => setData({...data, legal: {...data.legal, privacidad: {...data.legal.privacidad, intro: e.target.value}}})}
+                />
+              </div>
+              <div className="space-y-4">
+                <span className="text-xs font-black uppercase text-text-main ml-2">Secciones (Títulos y Textos)</span>
+                {data.legal.privacidad.sections.map((sec, i) => (
+                  <div key={i} className="bg-gray-50 p-6 rounded-2xl border border-gray-200 space-y-4 relative">
+                    <button 
+                      onClick={() => removeLegalSection('privacidad', i)}
+                      className="absolute top-4 right-4 text-red-500 bg-red-50 w-8 h-8 rounded-full flex items-center justify-center font-bold hover:bg-red-100 transition-colors"
+                    >×</button>
+                    <Input label="Título" value={sec.title} onChange={v => updateLegalSection('privacidad', i, 'title', v)} />
+                    <div className="space-y-2">
+                      <span className="text-xs font-black uppercase text-text-main ml-2">Texto</span>
+                      <textarea 
+                        className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-medium text-text-main h-24" 
+                        value={sec.text} 
+                        onChange={e => updateLegalSection('privacidad', i, 'text', e.target.value)} 
+                      />
+                    </div>
+                  </div>
+                ))}
+                <button 
+                  onClick={() => addLegalSection('privacidad')}
+                  className="w-full bg-gray-200 text-gray-700 py-4 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-gray-300 transition-colors"
+                >
+                  + Añadir Sección
+                </button>
+              </div>
             </div>
           </Modal>
         )}
 
         {activeModal === 'terminos' && (
           <Modal title="Editar Términos y Condiciones" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
-            <div className="space-y-4">
-              <span className="text-xs font-black uppercase text-text-main ml-2">Contenido de Términos</span>
-              <textarea 
-                className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-medium text-text-main min-h-[300px]" 
-                value={data.legal.terminos} 
-                onChange={e => setData({...data, legal: {...data.legal, terminos: e.target.value}})}
-                placeholder="Escribe aquí los términos y condiciones..."
-              />
+            <div className="space-y-8">
+              <div className="space-y-2">
+                <span className="text-xs font-black uppercase text-text-main ml-2">Párrafo Introductorio</span>
+                <textarea 
+                  className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-medium text-text-main h-24" 
+                  value={data.legal.terminos.intro} 
+                  onChange={e => setData({...data, legal: {...data.legal, terminos: {...data.legal.terminos, intro: e.target.value}}})}
+                />
+              </div>
+              <div className="space-y-4">
+                <span className="text-xs font-black uppercase text-text-main ml-2">Secciones (Títulos y Textos)</span>
+                {data.legal.terminos.sections.map((sec, i) => (
+                  <div key={i} className="bg-gray-50 p-6 rounded-2xl border border-gray-200 space-y-4 relative">
+                    <button 
+                      onClick={() => removeLegalSection('terminos', i)}
+                      className="absolute top-4 right-4 text-red-500 bg-red-50 w-8 h-8 rounded-full flex items-center justify-center font-bold hover:bg-red-100 transition-colors"
+                    >×</button>
+                    <Input label="Título" value={sec.title} onChange={v => updateLegalSection('terminos', i, 'title', v)} />
+                    <div className="space-y-2">
+                      <span className="text-xs font-black uppercase text-text-main ml-2">Texto</span>
+                      <textarea 
+                        className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-medium text-text-main h-24" 
+                        value={sec.text} 
+                        onChange={e => updateLegalSection('terminos', i, 'text', e.target.value)} 
+                      />
+                    </div>
+                  </div>
+                ))}
+                <button 
+                  onClick={() => addLegalSection('terminos')}
+                  className="w-full bg-gray-200 text-gray-700 py-4 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-gray-300 transition-colors"
+                >
+                  + Añadir Sección
+                </button>
+              </div>
             </div>
           </Modal>
         )}
