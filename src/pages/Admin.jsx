@@ -81,6 +81,7 @@ export default function Admin() {
           if (!resData.contact.mapUrl) resData.contact.mapUrl = '';
           if (!resData.acompanamiento) resData.acompanamiento = [];
           if (!resData.colors) resData.colors = defaultColors;
+          if (!resData.legal) resData.legal = { privacidad: '', terminos: '' };
           setData(resData);
         })
         .catch(() => {
@@ -365,6 +366,29 @@ export default function Admin() {
             </div>
           </div>
 
+          <div className="space-y-4">
+            <h2 className="text-xl font-black text-text-main flex items-center gap-2">
+              <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+              Legales
+            </h2>
+            <div className="grid md:grid-cols-2 gap-4">
+              <AdminCard 
+                title="Aviso de Privacidad" 
+                subtitle="Editar políticas" 
+                colorClass="bg-gray-500" 
+                icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>} 
+                onClick={() => setActiveModal('privacidad')} 
+              />
+              <AdminCard 
+                title="Términos y Condiciones" 
+                subtitle="Editar términos" 
+                colorClass="bg-gray-700" 
+                icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>} 
+                onClick={() => setActiveModal('terminos')} 
+              />
+            </div>
+          </div>
+
         </div>
 
         {activeModal === 'hero' && (
@@ -535,7 +559,7 @@ export default function Admin() {
               <Input label="Correo Electrónico" value={data.contact.email} onChange={v => setData({...data, contact: {...data.contact, email: v}})} />
               <div className="space-y-2">
                 <span className="text-xs font-black uppercase text-text-main ml-2">Mapa (Pega el código iframe de Google Maps aquí)</span>
-                <p className="text-xs text-gray-500 ml-2 mb-2">Simplemente pega el código que te da Google Maps al "Compartir > Incorporar un mapa". El sistema se encargará del resto.</p>
+                <p className="text-xs text-gray-500 ml-2 mb-2">Simplemente pega el código que te da Google Maps al "Compartir &gt; Incorporar un mapa". El sistema se encargará del resto.</p>
                 <textarea 
                   className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-bold text-text-main min-h-[100px]" 
                   value={data.contact.mapUrl} 
@@ -617,6 +641,35 @@ export default function Admin() {
             </div>
           </Modal>
         )}
+
+        {activeModal === 'privacidad' && (
+          <Modal title="Editar Aviso de Privacidad" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
+            <div className="space-y-4">
+              <span className="text-xs font-black uppercase text-text-main ml-2">Contenido de Privacidad</span>
+              <textarea 
+                className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-medium text-text-main min-h-[300px]" 
+                value={data.legal.privacidad} 
+                onChange={e => setData({...data, legal: {...data.legal, privacidad: e.target.value}})}
+                placeholder="Escribe aquí tu aviso de privacidad..."
+              />
+            </div>
+          </Modal>
+        )}
+
+        {activeModal === 'terminos' && (
+          <Modal title="Editar Términos y Condiciones" onClose={handleCloseModal} onSave={saveChanges} saving={saving}>
+            <div className="space-y-4">
+              <span className="text-xs font-black uppercase text-text-main ml-2">Contenido de Términos</span>
+              <textarea 
+                className="w-full bg-white border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 ring-accent-green font-medium text-text-main min-h-[300px]" 
+                value={data.legal.terminos} 
+                onChange={e => setData({...data, legal: {...data.legal, terminos: e.target.value}})}
+                placeholder="Escribe aquí los términos y condiciones..."
+              />
+            </div>
+          </Modal>
+        )}
+
       </div>
     </div>
   );

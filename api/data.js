@@ -45,6 +45,8 @@ export default async function handler(req, res) {
     await pool.query('ALTER TABLE professional ADD COLUMN IF NOT EXISTS about_caption TEXT');
     await pool.query('ALTER TABLE professional ADD COLUMN IF NOT EXISTS acompanamiento TEXT');
     await pool.query('ALTER TABLE professional ADD COLUMN IF NOT EXISTS site_colors TEXT');
+    await pool.query('ALTER TABLE professional ADD COLUMN IF NOT EXISTS privacidad TEXT');
+    await pool.query('ALTER TABLE professional ADD COLUMN IF NOT EXISTS terminos TEXT');
   } catch(e) {}
 
   if (req.method === 'GET') {
@@ -100,7 +102,11 @@ export default async function handler(req, res) {
           saturday: contact.saturday,
           sunday: contact.sunday
         },
-        gallery: gallery
+        gallery: gallery,
+        legal: {
+          privacidad: prof.privacidad || '',
+          terminos: prof.terminos || ''
+        }
       };
 
       return res.status(200).json(responseData);
@@ -128,13 +134,15 @@ export default async function handler(req, res) {
           name = $1, subtitle = $2, therapy = $3, phone = $4, image = $5,
           education = $6, approach = $7, objective = $8, target = $9, logo = $10,
           title_main = $11, title_italic = $12, about_title = $13, about_title_highlight = $14,
-          about_subtitle = $15, about_caption = $16, acompanamiento = $17, site_colors = $18
+          about_subtitle = $15, about_caption = $16, acompanamiento = $17, site_colors = $18,
+          privacidad = $19, terminos = $20
           WHERE id = 1
         `, [
           newData.hero.name, newData.hero.subtitle, newData.hero.therapy, newData.hero.phone, newData.hero.image,
           newData.about.education, newData.about.approach, newData.about.objective, newData.about.target, newData.hero.logo,
           newData.hero.titleMain, newData.hero.titleItalic, newData.about.title, newData.about.titleHighlight,
-          newData.about.subtitle, newData.about.caption, JSON.stringify(newData.acompanamiento), JSON.stringify(newData.colors)
+          newData.about.subtitle, newData.about.caption, JSON.stringify(newData.acompanamiento), JSON.stringify(newData.colors),
+          newData.legal.privacidad, newData.legal.terminos
         ]);
 
         await client.query('DELETE FROM service WHERE professional_id = 1');
